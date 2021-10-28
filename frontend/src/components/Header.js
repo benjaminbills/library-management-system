@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../actions/userActions";
 function Header() {
@@ -7,6 +7,9 @@ function Header() {
   const logoutHandler = () => {
     dispatch(logout());
   };
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   return (
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <div className="container-fluid">
@@ -18,13 +21,20 @@ function Header() {
           <Link className="nav-link" aria-current="page" to="/">
             Home
           </Link>
-          <button
-            className="nav-link"
-            aria-current="page"
-            onClick={logoutHandler}
-          >
-            Logout
-          </button>
+          {!userInfo && (
+            <Link className="nav-link" aria-current="page" to="/login">
+              Login
+            </Link>
+          )}
+          {userInfo && (
+            <button
+              className="nav-link"
+              aria-current="page"
+              onClick={logoutHandler}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </nav>

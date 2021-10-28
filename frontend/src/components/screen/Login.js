@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 function Login() {
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
@@ -40,9 +40,13 @@ function Login() {
           <label>Password</label>
           <input type="password" ref={passwordRef} className="form-control" />
         </div>
-        <button type="submit" className="btn btn-success">
+
+        <button type="submit" className="btn btn-success mb-3">
           Login
         </button>
+        <p>
+          Don't have an account <Link to="/register">Sign up here</Link>
+        </p>
       </form>
     </div>
   );
