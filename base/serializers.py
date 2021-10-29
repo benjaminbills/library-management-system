@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
   isAdmin=serializers.SerializerMethodField(read_only=True)
   class Meta:
     model = NewUser
-    fields = ['id', 'user_name', 'email','isAdmin']
+    fields = ['id', 'user_name', 'email','isAdmin', 'about']
   def get_id(self, obj):
     return obj.id  
   def get_isAdmin(self, obj):

@@ -2,12 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { register } from "../../actions/userActions";
+import Loader from "../Loader";
 
 function Register() {
   const dispatch = useDispatch();
   const history = useHistory();
   const userRegister = useSelector((state) => state.userRegister);
-  const { error, loading, userInfo } = userRegister;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const { error, loading, userInfo: userInfoReg } = userRegister;
   const [message, setMessage] = useState("");
   const usernameRef = useRef("");
   const emailRef = useRef("");
@@ -30,16 +33,16 @@ function Register() {
     }
   };
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo || userInfoReg) {
       history.push("/");
     }
-  }, [userInfo, history]);
+  }, [userInfo, history, userInfoReg]);
   return (
     <div className="container pt-5">
       <form onSubmit={submitHandler}>
         <h2>Register</h2>
         {error && <p variant="danger">{error}</p>}
-
+        {loading && <Loader />}
         <div className="mb-3">
           <label>Username</label>
           <input type="text" ref={usernameRef} className="form-control" />

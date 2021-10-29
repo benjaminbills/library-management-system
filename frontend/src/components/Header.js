@@ -18,11 +18,16 @@ function Header() {
         </button>
 
         <div className="navbar-nav">
-          <Link className="nav-link" aria-current="page" to="/">
+          {userInfo && (
+            <Link className="nav-link" to={`/profile/${userInfo.id}`}>
+              {userInfo.user_name}
+            </Link>
+          )}
+          <Link className="nav-link" to="/">
             Home
           </Link>
           {!userInfo && (
-            <Link className="nav-link" aria-current="page" to="/login">
+            <Link className="nav-link" to="/login">
               Login
             </Link>
           )}

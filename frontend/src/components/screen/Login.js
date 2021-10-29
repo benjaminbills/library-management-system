@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
 import { Link, useHistory } from "react-router-dom";
+import Loader from "../Loader";
 function Login() {
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
@@ -13,7 +14,6 @@ function Login() {
     e.preventDefault();
     let email = emailRef.current.value;
     let password = passwordRef.current.value;
-    console.log(email, password);
     dispatch(login(email, password));
     emailRef.current.value = "";
     passwordRef.current.value = "";
@@ -30,7 +30,7 @@ function Login() {
     <div className="container pt-5">
       <form onSubmit={submitHandler}>
         {error && <p>{error}</p>}
-        {loading && <p>loading...</p>}
+        {loading && <Loader />}
         <h2>Sign In</h2>
         <div className="mb-3">
           <label>Email</label>
@@ -44,6 +44,9 @@ function Login() {
         <button type="submit" className="btn btn-success mb-3">
           Login
         </button>
+        <p>
+          Forgot Password? <Link to="/forgotpassword">Reset Password</Link>
+        </p>
         <p>
           Don't have an account <Link to="/register">Sign up here</Link>
         </p>
