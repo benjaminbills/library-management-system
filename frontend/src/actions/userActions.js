@@ -11,6 +11,9 @@ import {
   USER_PROFILE_REQUEST,
   USER_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_SUCCESS,
+  USER_FORGOT_PASSWORD_FAIL,
+  USER_FORGOT_PASSWORD_REQUEST,
+  USER_FORGOT_PASSWORD_SUCCESS,
 } from "../constants/userConstant";
 
 export const login = (email, password) => async (dispatch) => {
@@ -157,3 +160,35 @@ export const updateProfile =
       });
     }
   };
+
+export const forgotPassword = (email) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_FORGOT_PASSWORD_REQUEST,
+    });
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.post(
+      "api/user/forgotpassword/",
+      {
+        email: email,
+      },
+      config
+    );
+    dispatch({
+      type: USER_FORGOT_PASSWORD_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_FORGOT_PASSWORD_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};

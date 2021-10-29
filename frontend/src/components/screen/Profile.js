@@ -38,6 +38,8 @@ function Profile() {
     } else {
       dispatch(updateProfile(name, about, password));
       dispatch(getUserProfile(id));
+      setPassword("");
+      setConfirmPassword("");
     }
   };
   return (
