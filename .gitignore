@@ -8,10 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-<<<<<<< HEAD
-=======
 build/
->>>>>>> f3d465a5903f59836828ce024d642dbd49f34f85
 develop-eggs/
 dist/
 downloads/
