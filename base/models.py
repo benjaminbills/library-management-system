@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, User
+from django_filters.filters import _truncate
 
 
 class CustomAccountManager(BaseUserManager):
@@ -54,6 +55,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
         return self.user_name
 
 class Books(models.Model):
+    user = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True )
     title = models.CharField(max_length=500)
     author = models.CharField(max_length=500)
     published = models.DateField()

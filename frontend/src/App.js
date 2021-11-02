@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import Profile from "./components/screen/Profile";
 import ForgotPassword from "./components/screen/ForgotPassword";
 import Books from "./components/screen/Books";
+import EditBook from "./components/screen/EditBook";
 function App() {
   return (
     <Router>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/forgotpassword" component={ForgotPassword} exact />
         <Route path="/profile/:id" component={Profile} exact />
         <Route path="/books/" component={Books} exact />
+        <Route path="/book/edit/:id" component={EditBook} exact />
       </div>
     </Router>
   );

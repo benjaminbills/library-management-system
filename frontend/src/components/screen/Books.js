@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBooks } from "../../actions/bookActions";
+import { addBook, getBooks } from "../../actions/bookActions";
 import SearchBox from "./SearchBox";
 
 function Books(props) {
@@ -28,9 +28,16 @@ function Books(props) {
   useEffect(() => {
     dispatch(getBooks());
   }, [dispatch]);
+
+  const addBookHandler = () => {
+    dispatch(addBook());
+  };
   return (
     <div>
       <h2>Books</h2>
+      <button className="btn btn-dark" onClick={addBookHandler}>
+        Add Books
+      </button>
       <table className="table table-striped">
         <thead>
           <tr>
@@ -46,7 +53,7 @@ function Books(props) {
               <input
                 onChange={titleChangeHandler}
                 className="form-control"
-                placeholder={props.placename}
+                placeholder="Title"
                 ref={titleRef}
               />
             </td>
@@ -54,7 +61,7 @@ function Books(props) {
               <input
                 onChange={authorChangeHandler}
                 className="form-control"
-                placeholder={props.placename}
+                placeholder="Author"
                 ref={authorRef}
               />
             </td>

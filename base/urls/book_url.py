@@ -3,4 +3,5 @@ from base.views import book_views as views
 
 urlpatterns = [
     path('', views.getBooks, name='all-books'),
+    path('add/', views.addBook, name='add-book')
 ]

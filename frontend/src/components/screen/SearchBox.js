@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { getBooks } from "../../actions/bookActions";
 
 function SearchBox(props) {
-  const authorRef = useRef("");
   const titleRef = useRef("");
   const dispatch = useDispatch();
   const listenHandler = (e) => {
