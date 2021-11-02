@@ -52,3 +52,10 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.user_name
+
+class Books(models.Model):
+    title = models.CharField(max_length=500)
+    author = models.CharField(max_length=500)
+    published = models.DateField()
+    image = models.ImageField(null=True, blank=True)
+    num_of_book = models.IntegerField(null=True, blank=True, default=0)

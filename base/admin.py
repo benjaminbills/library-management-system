@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import NewUser
+from .models import Books, NewUser
 from django.contrib.auth.admin import UserAdmin
 from django.forms import TextInput, Textarea, CharField
 from django import forms
@@ -30,3 +30,4 @@ class UserAdminConfig(UserAdmin):
 
 
 admin.site.register(NewUser, UserAdminConfig)
+admin.site.register(Books)

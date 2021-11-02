@@ -7,6 +7,7 @@ import Register from "./components/screen/Register";
 import Header from "./components/Header";
 import Profile from "./components/screen/Profile";
 import ForgotPassword from "./components/screen/ForgotPassword";
+import Books from "./components/screen/Books";
 function App() {
   return (
     <Router>
@@ -17,6 +18,7 @@ function App() {
         <Route path="/register" component={Register} exact />
         <Route path="/forgotpassword" component={ForgotPassword} exact />
         <Route path="/profile/:id" component={Profile} exact />
+        <Route path="/books/" component={Books} exact />
       </div>
     </Router>
   );

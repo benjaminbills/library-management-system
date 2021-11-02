@@ -1,6 +1,7 @@
 from django.db import models
+from django.db.models import fields
 from rest_framework import serializers
-from base.models import NewUser
+from base.models import Books, NewUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,3 +29,8 @@ class UserSerializerWithToken(UserSerializer):
   def get_token(self,obj):
     token = RefreshToken.for_user(obj)
     return str(token.access_token)
+
+class BookSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Books
+    fields = '__all__'
