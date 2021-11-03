@@ -20,7 +20,7 @@ function App() {
         <Route path="/forgotpassword" component={ForgotPassword} exact />
         <Route path="/profile/:id" component={Profile} exact />
         <Route path="/books/" component={Books} exact />
-        <Route path="/book/edit/:id" component={EditBook} exact />
+        <Route path="/books/edit/:id" component={EditBook} exact />
       </div>
     </Router>
   );

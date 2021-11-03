@@ -1,14 +1,20 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addBook, getBooks } from "../../actions/bookActions";
+import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+import { addBook, deleteBook, getBooks } from "../../actions/bookActions";
+import { ADD_BOOK_RESET } from "../../constants/bookConstant";
 import SearchBox from "./SearchBox";
 
 function Books(props) {
+  const history = useHistory();
   const dispatch = useDispatch();
   const authorRef = useRef("");
   const titleRef = useRef("");
   const bookList = useSelector((state) => state.bookList);
   const { loading, error, books } = bookList;
+  const addB = useSelector((state) => state.addBook);
+  const { success: successCreate, loading: addBookLoading, book } = addB;
   const titleChangeHandler = (e) => {
     e.preventDefault();
     dispatch(
@@ -25,9 +31,20 @@ function Books(props) {
       )
     );
   };
+  const deleteHandler = (id) => {
+    if (window.confirm("Are you sure you want to delete this product")) {
+      dispatch(deleteBook(id));
+    }
+    window.location.reload();
+  };
   useEffect(() => {
-    dispatch(getBooks());
-  }, [dispatch]);
+    dispatch({ type: ADD_BOOK_RESET });
+    if (successCreate) {
+      history.push(`/books/edit/${book.id}`);
+    } else {
+      dispatch(getBooks());
+    }
+  }, [dispatch, successCreate, book, history]);
 
   const addBookHandler = () => {
     dispatch(addBook());
@@ -72,6 +89,14 @@ function Books(props) {
               <td>{book.author}</td>
               <td>{book.published}</td>
               <td>{book.num_of_book}</td>
+              <td>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => deleteHandler(book.id)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

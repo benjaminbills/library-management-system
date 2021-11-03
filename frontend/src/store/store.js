@@ -6,13 +6,23 @@ import {
   userProfileReducer,
   userRegisterReducer,
 } from "../reducers/userReducers";
-import { bookListReducer } from "../reducers/bookReducers";
+import {
+  addBookReducer,
+  BookDeleteReducer,
+  BookDetailsReducer,
+  bookListReducer,
+  BookUpdateReducer,
+} from "../reducers/bookReducers";
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userProfile: userProfileReducer,
   bookList: bookListReducer,
+  addBook: addBookReducer,
+  bookDetails: BookDetailsReducer,
+  bookUpdate: BookUpdateReducer,
+  bookDelete: BookDeleteReducer,
 });
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))

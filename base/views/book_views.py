@@ -17,7 +17,7 @@ def getBooks(request):
   bookFilter = BookFilter(request.GET, queryset=books)
   page = request.query_params.get('page')
   books = bookFilter.qs
-  paginator = Paginator(books, 20)
+  paginator = Paginator(books, 80)
   try:
     books = paginator.page('')
   except PageNotAnInteger:
@@ -42,3 +42,27 @@ def addBook(request):
   )
   serializer = BookSerializer(book, many=False)
   return Response(serializer.data)
+
+@api_view(['GET'])
+def getBook(request, pk):
+  book = Books.objects.get(id=pk)
+  serializer = BookSerializer(book, many=False)
+  return Response(serializer.data)
+
+@api_view(['PUT'])
+def updateBook(request, pk):
+  book = Books.objects.get(id=pk)
+  data = request.data
+  book.title = data['title']
+  book.author = data['author']
+  book.published = data['published']
+  book.num_of_book = data['num_of_book']
+  book.save()
+  serializer = BookSerializer(book, many=False)
+  return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteBook(request, pk):
+  book = Books.objects.get(id=pk)
+  book.delete()
+  return Response('book was deleted successfully')
