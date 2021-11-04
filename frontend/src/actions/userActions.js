@@ -14,6 +14,9 @@ import {
   USER_FORGOT_PASSWORD_FAIL,
   USER_FORGOT_PASSWORD_REQUEST,
   USER_FORGOT_PASSWORD_SUCCESS,
+  REGISTER_STUDENT_REQUEST,
+  REGISTER_STUDENT_SUCCESS,
+  REGISTER_STUDENT_FAIL,
 } from "../constants/userConstant";
 
 export const login = (email, password) => async (dispatch) => {
@@ -192,3 +195,38 @@ export const forgotPassword = (email) => async (dispatch) => {
     });
   }
 };
+
+export const registerStudent =
+  (username, email, studentId) => async (dispatch) => {
+    try {
+      dispatch({
+        type: REGISTER_STUDENT_REQUEST,
+      });
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "api/user/register-student/",
+        {
+          email: email,
+          schoolId: studentId,
+          username: username,
+        },
+        config
+      );
+      dispatch({
+        type: REGISTER_STUDENT_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: REGISTER_STUDENT_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  };

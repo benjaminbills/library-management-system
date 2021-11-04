@@ -26,6 +26,9 @@ function Header() {
           <Link className="nav-link" to="/">
             Home
           </Link>
+          <Link className="nav-link" to="/students">
+            Students
+          </Link>
           {!userInfo && (
             <Link className="nav-link" to="/login">
               Login

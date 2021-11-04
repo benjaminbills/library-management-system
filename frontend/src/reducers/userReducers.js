@@ -17,6 +17,10 @@ import {
   USER_FORGOT_PASSWORD_REQUEST,
   USER_FORGOT_PASSWORD_SUCCESS,
   USER_FORGOT_PASSWORD_FAIL,
+  REGISTER_STUDENT_REQUEST,
+  REGISTER_STUDENT_SUCCESS,
+  REGISTER_STUDENT_FAIL,
+  REGISTER_STUDENT_RESET,
 } from "../constants/userConstant";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -78,7 +82,10 @@ export const userUpdateProfileReducer = (state = { user: {} }, action) => {
   }
 };
 
-export const userForgotPasswordReducer = (state = {}, action) => {
+export const userForgotPasswordReducer = (
+  state = { success: false },
+  action
+) => {
   switch (action.type) {
     case USER_FORGOT_PASSWORD_REQUEST:
       return { loading: true };
@@ -86,6 +93,21 @@ export const userForgotPasswordReducer = (state = {}, action) => {
       return { loading: false, detail: action.payload };
     case USER_FORGOT_PASSWORD_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const studentRegisterReducer = (state = {}, action) => {
+  switch (action.type) {
+    case REGISTER_STUDENT_REQUEST:
+      return { loading: true, success: false };
+    case REGISTER_STUDENT_SUCCESS:
+      return { loading: false, success: true, studentInfo: action.payload };
+    case REGISTER_STUDENT_FAIL:
+      return { loading: false, error: action.payload };
+    case REGISTER_STUDENT_RESET:
+      return {};
     default:
       return state;
   }

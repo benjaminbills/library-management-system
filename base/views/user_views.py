@@ -64,15 +64,18 @@ def updateUserProfile(request):
   user.save()
   return Response(serializer.data)
 
-@api_view(['POST'])
-def forgotPassword(request):
+def generatePassword():
   lower = string.ascii_lowercase
   upper = string.ascii_uppercase
   num = string.digits
   all = lower + upper + num
   temp = random.sample(all, 6)
   password = "".join(temp)
-  print(password)
+  return password
+
+@api_view(['POST'])
+def forgotPassword(request):
+  password = generatePassword()
   email = request.data['email']
   try:
     user = NewUser.objects.get(email=email)
@@ -96,3 +99,20 @@ def deleteUser(request, pk):
   except:
     message = {'detail':'User does not exist'}
     return Response(message, status=status.HTTP_400_BAD_REQUEST )
+
+@api_view(['POST'])
+def registerStudent(request):
+  data=request.data
+  passwordGen = generatePassword()
+  try:
+    user = NewUser.objects.create(
+      user_name = data['username'],
+      email = data['email'],
+      password = make_password(passwordGen)
+    )
+    serializer = UserSerializerWithToken(user, many=False)
+    
+    return Response(serializer.data)
+  except:
+    message = {'detail':'User with this email or username already exist'}
+    return Response(message, status=status.HTTP_400_BAD_REQUEST)

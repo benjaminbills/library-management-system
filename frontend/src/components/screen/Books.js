@@ -62,6 +62,8 @@ function Books(props) {
             <th scope="col">Author</th>
             <th scope="col">Published</th>
             <th scope="col">Available</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -96,6 +98,9 @@ function Books(props) {
                 >
                   Delete
                 </button>
+              </td>
+              <td>
+                <Link to={`/books/edit/${book.id}`}>Edit</Link>
               </td>
             </tr>
           ))}
