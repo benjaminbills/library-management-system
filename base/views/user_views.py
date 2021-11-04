@@ -8,7 +8,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from base.email import send_reset_password_email
 import random
 import string
+from base.filters import UserFilter
 from base.serializers import UserSerializer, UserSerializerWithToken
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 from base.models import NewUser
@@ -54,8 +56,21 @@ def getUserByID(request, pk):
 @api_view(['GET'])
 def getUsers(request):
   users = NewUser.objects.filter(is_staff=False)
+  userFilter = UserFilter(request.GET, queryset=users)
+  page = request.query_params.get('page')
+  users = userFilter.qs
+  paginator = Paginator(users, 80)
+  try:
+    users = paginator.page('')
+  except PageNotAnInteger:
+    users = paginator.page(1)
+  except EmptyPage:
+    users = paginator.page(paginator.num_pages)
+  if page == None:
+    page == 1
+  page = int(page)
   serializer = UserSerializer(users, many=True)
-  return Response(serializer.data)
+  return Response({'users':serializer.data, 'page':page, 'pages':paginator.num_pages})
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

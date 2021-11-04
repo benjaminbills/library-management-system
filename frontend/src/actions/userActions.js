@@ -234,28 +234,30 @@ export const registerStudent =
     }
   };
 
-export const getUsers = () => async (dispatch, getState) => {
-  try {
-    dispatch({ type: USER_LIST_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-    const { data } = await axios.get(`api/user/`, config);
-    console.log(data);
-    dispatch({ type: USER_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: USER_LIST_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
-    });
-  }
-};
+export const getUsers =
+  (search = "") =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_LIST_REQUEST });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.get(`api/user/?${search}&page=1`, config);
+      console.log(data);
+      dispatch({ type: USER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: USER_LIST_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  };

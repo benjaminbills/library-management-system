@@ -25,6 +25,9 @@ function Students() {
   const usernameRef = useRef("");
   const emailRef = useRef("");
   const schoolIdRef = useRef("");
+  const userNameSearchRef = useRef("");
+  const emailSearchRef = useRef("");
+  const schoolIdSearchRef = useRef("");
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const studentRegister = useSelector((state) => state.studentRegister);
@@ -54,6 +57,30 @@ function Students() {
     dispatch(getUsers());
     dispatch({ type: REGISTER_STUDENT_RESET });
   }, [dispatch]);
+  const idChangeHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      getUsers(
+        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
+      )
+    );
+  };
+  const usernameChangeHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      getUsers(
+        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
+      )
+    );
+  };
+  const emailChangeHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      getUsers(
+        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
+      )
+    );
+  };
   return (
     <div>
       <div>
@@ -108,26 +135,26 @@ function Students() {
             <tr>
               <td>
                 <input
-                  // onChange={titleChangeHandler}
+                  onChange={idChangeHandler}
                   className="form-control"
                   placeholder="ID"
-                  // ref={titleRef}
+                  ref={schoolIdRef}
                 />
               </td>
               <td>
                 <input
-                  // onChange={authorChangeHandler}
+                  onChange={usernameChangeHandler}
                   className="form-control"
                   placeholder="Name"
-                  // ref={authorRef}
+                  ref={userNameSearchRef}
                 />
               </td>
               <td>
                 <input
-                  // onChange={authorChangeHandler}
+                  onChange={emailChangeHandler}
                   className="form-control"
                   placeholder="Email"
-                  // ref={authorRef}
+                  ref={emailSearchRef}
                 />
               </td>
             </tr>

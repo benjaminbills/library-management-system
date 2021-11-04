@@ -121,7 +121,7 @@ export const userListReducer = (state = { students: [] }, action) => {
     case USER_LIST_REQUEST:
       return { loading: true, students: [] };
     case USER_LIST_SUCCESS:
-      return { loading: false, success: true, students: action.payload };
+      return { loading: false, success: true, students: action.payload.users };
     case USER_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
