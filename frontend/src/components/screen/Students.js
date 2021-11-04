@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
-import { registerStudent } from "../../actions/userActions";
+import { getUsers, registerStudent } from "../../actions/userActions";
 import { REGISTER_STUDENT_RESET } from "../../constants/userConstant";
 
 const customStyles = {
@@ -29,6 +29,12 @@ function Students() {
   const [open, setOpen] = useState(false);
   const studentRegister = useSelector((state) => state.studentRegister);
   const { success, loading, studentInfo, error } = studentRegister;
+  const userList = useSelector((state) => state.userList);
+  const {
+    success: userListSuccess,
+    loading: userListLoading,
+    students,
+  } = userList;
   const openModalHandler = () => {
     dispatch({ type: REGISTER_STUDENT_RESET });
     setOpen(true);
@@ -45,6 +51,7 @@ function Students() {
     dispatch(registerStudent(email, username, schoolId));
   };
   useEffect(() => {
+    dispatch(getUsers());
     dispatch({ type: REGISTER_STUDENT_RESET });
   }, [dispatch]);
   return (
@@ -92,8 +99,8 @@ function Students() {
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Name</th>
+              <th scope="col">Email</th>
               <th scope="col">Collected Books</th>
-              <th scope="col"></th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -115,26 +122,32 @@ function Students() {
                   // ref={authorRef}
                 />
               </td>
-            </tr>
-            {/* {books.map((book) => (
-            <tr key={book.id}>
-              <td>{book.title}</td>
-              <td>{book.author}</td>
-              <td>{book.published}</td>
-              <td>{book.num_of_book}</td>
               <td>
-                <button
+                <input
+                  // onChange={authorChangeHandler}
+                  className="form-control"
+                  placeholder="Email"
+                  // ref={authorRef}
+                />
+              </td>
+            </tr>
+            {students.map((student) => (
+              <tr key={student.id}>
+                <td>{student.id}</td>
+                <td>{student.user_name}</td>
+                <td>{student.email}</td>
+
+                <td>
+                  {/* <button
                   className="btn btn-sm btn-danger"
                   onClick={() => deleteHandler(book.id)}
                 >
                   Delete
-                </button>
-              </td>
-              <td>
-                <Link to={`/books/edit/${book.id}`}>Edit</Link>
-              </td>
-            </tr>
-          ))} */}
+                </button> */}
+                </td>
+                <td>{/* <Link to={`/books/edit/${book.id}`}>Edit</Link> */}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
   studentRegisterReducer,
+  userListReducer,
   userLoginReducer,
   userProfileReducer,
   userRegisterReducer,
@@ -25,6 +26,7 @@ const reducer = combineReducers({
   bookUpdate: BookUpdateReducer,
   bookDelete: BookDeleteReducer,
   studentRegister: studentRegisterReducer,
+  userList: userListReducer,
 });
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
