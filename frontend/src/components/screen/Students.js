@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { getUsers, registerStudent } from "../../actions/userActions";
 import { REGISTER_STUDENT_RESET } from "../../constants/userConstant";
 
@@ -158,12 +159,17 @@ function Students() {
                 />
               </td>
             </tr>
+
             {students.map((student) => (
               <tr key={student.id}>
                 <td>{student.id}</td>
                 <td>{student.user_name}</td>
                 <td>{student.email}</td>
-
+                <td>
+                  <Link to={`/students/${student.id}`}>
+                    <button className="btn btn-dark">Assign Book</button>
+                  </Link>
+                </td>
                 <td>
                   {/* <button
                   className="btn btn-sm btn-danger"

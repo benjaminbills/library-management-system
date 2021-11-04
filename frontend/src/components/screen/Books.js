@@ -15,6 +15,9 @@ function Books(props) {
   const { loading, error, books } = bookList;
   const addB = useSelector((state) => state.addBook);
   const { success: successCreate, loading: addBookLoading, book } = addB;
+  let location = history.location.pathname;
+  let renderEditAndDelete = location === "/books";
+
   const titleChangeHandler = (e) => {
     e.preventDefault();
     dispatch(
@@ -36,6 +39,9 @@ function Books(props) {
       dispatch(deleteBook(id));
     }
     window.location.reload();
+  };
+  const assignBookHandler = () => {
+    console.log(props.studentId);
   };
   useEffect(() => {
     dispatch({ type: ADD_BOOK_RESET });
@@ -91,17 +97,28 @@ function Books(props) {
               <td>{book.author}</td>
               <td>{book.published}</td>
               <td>{book.num_of_book}</td>
-              <td>
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => deleteHandler(book.id)}
-                >
-                  Delete
-                </button>
-              </td>
-              <td>
-                <Link to={`/books/edit/${book.id}`}>Edit</Link>
-              </td>
+              {renderEditAndDelete && (
+                <td>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => deleteHandler(book.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
+              {renderEditAndDelete && (
+                <td>
+                  <Link to={`/books/edit/${book.id}`}>Edit</Link>
+                </td>
+              )}
+              {!renderEditAndDelete && (
+                <td>
+                  <button onClick={assignBookHandler} className="btn btn-dark">
+                    Assign Book
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

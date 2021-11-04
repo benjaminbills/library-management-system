@@ -10,6 +10,7 @@ import ForgotPassword from "./components/screen/ForgotPassword";
 import Books from "./components/screen/Books";
 import EditBook from "./components/screen/EditBook";
 import Students from "./components/screen/Students";
+import Student from "./components/screen/Student";
 function App() {
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
         <Route path="/books/" component={Books} exact />
         <Route path="/books/edit/:id" component={EditBook} exact />
         <Route path="/students/" component={Students} exact />
+        <Route path="/students/:id" component={Student} exact />
       </div>
     </Router>
   );
