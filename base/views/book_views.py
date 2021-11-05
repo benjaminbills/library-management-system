@@ -2,9 +2,9 @@
 from django.db.models.fields import DateField
 from rest_framework import serializers
 from base.filters import BookFilter
-from base.models import Books
+from base.models import Books, CollectedBooks, NewUser
 from datetime import date
-from base.serializers import BookSerializer
+from base.serializers import BookSerializer, CollectedBookSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -66,3 +66,25 @@ def deleteBook(request, pk):
   book = Books.objects.get(id=pk)
   book.delete()
   return Response('book was deleted successfully')
+
+@api_view(['POST'])
+def collectBook(request, pk):
+  user = NewUser.objects.get(id=pk)
+  data=request.data
+  book = Books.objects.get(id=data['bookId'])
+  collectedBook = CollectedBooks.objects.create(
+    user = user,
+    book = book
+  )
+  serializer = CollectedBookSerializer(collectedBook, many=False)
+    
+  return Response(serializer.data)
+
+@api_view(['GET'])
+def collectBookByUserId(request, pk):
+  user = NewUser.objects.get(id=pk)
+  collectedBookByUser = CollectedBooks.objects.filter(
+    user = user
+  )
+  serializer = CollectedBookSerializer(collectedBookByUser, many=True)
+  return Response(serializer.data)

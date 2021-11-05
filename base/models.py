@@ -61,3 +61,11 @@ class Books(models.Model):
     published = models.DateField()
     image = models.ImageField(null=True, blank=True)
     num_of_book = models.IntegerField(null=True, blank=True, default=0)
+
+class CollectedBooks(models.Model):
+    user = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True )
+    book = models.ForeignKey(Books, on_delete=models.SET_NULL, null=True)
+    collectedOn = models.DateTimeField(auto_now_add=True)
+    returnedOn = models.DateTimeField(null=True, blank=True)
+    isReturned = models.BooleanField(default=False)
+

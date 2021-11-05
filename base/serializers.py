@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import fields
 from rest_framework import serializers
-from base.models import Books, NewUser
+from base.models import Books, NewUser, CollectedBooks
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,3 +34,18 @@ class BookSerializer(serializers.ModelSerializer):
   class Meta:
     model = Books
     fields = '__all__'
+
+class CollectedBookSerializer(serializers.ModelSerializer):
+  user = serializers.SerializerMethodField(read_only=True)
+  book = serializers.SerializerMethodField(read_only=True)
+  class Meta:
+    model = CollectedBooks
+    fields = '__all__'
+  def get_user(self, obj):
+    user = obj.user
+    serializer = UserSerializer(user, many=False)
+    return serializer.data
+  def get_book(self, obj):
+    book = obj.book
+    serializer = BookSerializer(book, many=False )
+    return serializer.data
