@@ -10,6 +10,7 @@ import {
 } from "../reducers/userReducers";
 import {
   addBookReducer,
+  bookAssignReducer,
   BookDeleteReducer,
   BookDetailsReducer,
   bookListReducer,
@@ -27,6 +28,7 @@ const reducer = combineReducers({
   bookDelete: BookDeleteReducer,
   studentRegister: studentRegisterReducer,
   userList: userListReducer,
+  bookAssign: bookAssignReducer,
 });
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))

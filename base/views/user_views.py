@@ -9,7 +9,7 @@ from base.email import send_reset_password_email
 import random
 import string
 from base.filters import UserFilter
-from base.serializers import UserSerializer, UserSerializerWithToken
+from base.serializers import UserBookSerializer, UserSerializer, UserSerializerWithToken
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
@@ -50,7 +50,7 @@ def registerUser(request):
 @permission_classes([IsAuthenticated])
 def getUserByID(request, pk):
   user = NewUser.objects.get(id=pk)
-  serializer = UserSerializer(user, many=False)
+  serializer = UserBookSerializer(user, many=False)
   return Response(serializer.data)
 
 @api_view(['GET'])

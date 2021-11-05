@@ -16,6 +16,10 @@ import {
   BOOK_DELETE_REQUEST,
   BOOK_DELETE_SUCCESS,
   BOOK_DELETE_FAIL,
+  BOOK_ASSIGNED_REQUEST,
+  BOOK_ASSIGNED_SUCCESS,
+  BOOK_ASSIGNED_FAIL,
+  BOOK_ASSIGNED_RESET,
 } from "../constants/bookConstant";
 
 export const bookListReducer = (state = { books: [] }, action) => {
@@ -82,6 +86,21 @@ export const BookDeleteReducer = (state = {}, action) => {
       return { loading: false, success: true };
     case BOOK_DELETE_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const bookAssignReducer = (state = {}, action) => {
+  switch (action.type) {
+    case BOOK_ASSIGNED_REQUEST:
+      return { loading: true, success: false };
+    case BOOK_ASSIGNED_SUCCESS:
+      return { loading: false, success: true, issuedDetails: action.payload };
+    case BOOK_ASSIGNED_FAIL:
+      return { loading: false, error: action.payload };
+    case BOOK_ASSIGNED_RESET:
+      return {};
     default:
       return state;
   }

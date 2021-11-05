@@ -8,7 +8,7 @@ import { REGISTER_STUDENT_RESET } from "../../constants/userConstant";
 const customStyles = {
   overlay: {
     backgroundColor: "grey",
-    opacity: "0.9",
+    opacity: "0.95",
   },
   content: {
     top: "50%",

@@ -2,7 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { addBook, deleteBook, getBooks } from "../../actions/bookActions";
+import {
+  addBook,
+  assignBook,
+  deleteBook,
+  getBooks,
+} from "../../actions/bookActions";
 import { ADD_BOOK_RESET } from "../../constants/bookConstant";
 import SearchBox from "./SearchBox";
 
@@ -40,8 +45,8 @@ function Books(props) {
     }
     window.location.reload();
   };
-  const assignBookHandler = () => {
-    console.log(props.studentId);
+  const assignBookHandler = (id) => {
+    dispatch(assignBook(props.studentId, id));
   };
   useEffect(() => {
     dispatch({ type: ADD_BOOK_RESET });
@@ -114,7 +119,10 @@ function Books(props) {
               )}
               {!renderEditAndDelete && (
                 <td>
-                  <button onClick={assignBookHandler} className="btn btn-dark">
+                  <button
+                    onClick={() => assignBookHandler(book.id)}
+                    className="btn btn-dark"
+                  >
                     Assign Book
                   </button>
                 </td>

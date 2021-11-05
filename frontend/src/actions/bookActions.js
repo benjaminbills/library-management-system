@@ -14,6 +14,9 @@ import {
   BOOK_UPDATE_FAIL,
   BOOK_DELETE_REQUEST,
   BOOK_DELETE_FAIL,
+  BOOK_ASSIGNED_REQUEST,
+  BOOK_ASSIGNED_SUCCESS,
+  BOOK_ASSIGNED_FAIL,
 } from "../constants/bookConstant";
 
 export const getBooks =
@@ -144,6 +147,38 @@ export const deleteBook = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: BOOK_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const assignBook = (studentId, bookId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: BOOK_ASSIGNED_REQUEST,
+    });
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.post(
+      `api/book/collect/${studentId}/`,
+      {
+        bookId: bookId,
+      },
+      config
+    );
+    dispatch({
+      type: BOOK_ASSIGNED_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: BOOK_ASSIGNED_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
