@@ -65,6 +65,7 @@ function Student(props) {
                   <td>{book.isReturned ? <p>yes</p> : <p>No</p>}</td>
                   <td>
                     <button
+                      disabled={book.isReturned}
                       className="btn btn-dark"
                       onClick={(e) => returnBookHandler(book.id)}
                     >

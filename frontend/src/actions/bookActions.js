@@ -19,6 +19,9 @@ import {
   BOOK_ASSIGNED_FAIL,
   BOOK_RETURN_SUCCESS,
   BOOK_RETURN_FAIL,
+  BOOK_HISTORY_REQUEST,
+  BOOK_HISTORY_SUCCESS,
+  BOOK_HISTORY_FAIL,
 } from "../constants/bookConstant";
 
 export const getBooks =
@@ -210,6 +213,32 @@ export const returnBook = (collectedBookId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: BOOK_RETURN_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const bookHistory = (bookId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: BOOK_HISTORY_REQUEST,
+    });
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.get(`api/book/history/${bookId}/`, config);
+    dispatch({
+      type: BOOK_HISTORY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: BOOK_HISTORY_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

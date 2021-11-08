@@ -40,6 +40,7 @@ class BookSerializer(serializers.ModelSerializer):
 
 class CollectedBookSerializer(serializers.ModelSerializer):
   book = serializers.SerializerMethodField(read_only=True)
+  user = serializers.SerializerMethodField(read_only=True)
   class Meta:
     model = CollectedBooks
     fields = '__all__'
@@ -47,7 +48,11 @@ class CollectedBookSerializer(serializers.ModelSerializer):
     book = obj.book
     serializer = BookSerializer(book, many=False )
     return serializer.data
-  
+  def get_user(self, obj):
+    user = obj.user
+    serializer = UserSerializer(user, many=False)
+    return serializer.data
+
 class UserBookSerializer(serializers.ModelSerializer):
   user_name=serializers.SerializerMethodField(read_only=True)
   id=serializers.SerializerMethodField(read_only=True)

@@ -49,13 +49,22 @@ function Books(props) {
   const assignBookHandler = (id) => {
     dispatch(assignBook(props.studentId, id));
     dispatch(getUserProfile(props.studentId));
+    dispatch(
+      getBooks(
+        `title=${titleRef.current.value}&author=${authorRef.current.value}`
+      )
+    );
   };
   useEffect(() => {
     dispatch({ type: ADD_BOOK_RESET });
     if (successCreate) {
       history.push(`/books/edit/${book.id}`);
     } else {
-      dispatch(getBooks());
+      dispatch(
+        getBooks(
+          `title=${titleRef.current.value}&author=${authorRef.current.value}`
+        )
+      );
     }
   }, [dispatch, successCreate, book, history]);
 
@@ -100,7 +109,9 @@ function Books(props) {
           </tr>
           {books.map((book) => (
             <tr key={book.id}>
-              <td>{book.title}</td>
+              <td>
+                <Link to={`/books/${book.id}`}>{book.title}</Link>
+              </td>
               <td>{book.author}</td>
               <td>{book.published}</td>
               <td>{book.num_of_book}</td>
@@ -122,6 +133,7 @@ function Books(props) {
               {!renderEditAndDelete && (
                 <td>
                   <button
+                    disabled={book.num_of_book <= 0}
                     onClick={() => assignBookHandler(book.id)}
                     className="btn btn-dark"
                   >

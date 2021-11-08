@@ -13,6 +13,7 @@ import {
   bookAssignReducer,
   BookDeleteReducer,
   BookDetailsReducer,
+  bookHistoryReducer,
   bookListReducer,
   BookUpdateReducer,
   returnBookReducer,
@@ -31,6 +32,7 @@ const reducer = combineReducers({
   userList: userListReducer,
   bookAssign: bookAssignReducer,
   bookReturn: returnBookReducer,
+  historyOfBook: bookHistoryReducer,
 });
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))

@@ -72,13 +72,20 @@ def collectBook(request, pk):
   user = NewUser.objects.get(id=pk)
   data=request.data
   book = Books.objects.get(id=data['bookId'])
-  collectedBook = CollectedBooks.objects.create(
-    user = user,
-    book = book
-  )
-  serializer = CollectedBookSerializer(collectedBook, many=False)
+  
+  if book.num_of_book >= 1:
+      collectedBook = CollectedBooks.objects.create(
+        user = user,
+        book = book
+      )
+      book.num_of_book -= 1
+      book.save()
+      serializer = CollectedBookSerializer(collectedBook, many=False)
     
-  return Response(serializer.data)
+      return Response(serializer.data)
+  else:
+    return Response({'detail':'Book is not available'}, status=status.HTTP_404_NOT_FOUND)
+    
 
 @api_view(['GET'])
 def collectBookByUserId(request, pk):
@@ -92,12 +99,21 @@ def collectBookByUserId(request, pk):
 @api_view(['PUT'])
 def returnBook(request, pk):
   book = CollectedBooks.objects.get(id=pk)
-  print(book.isReturned==False)
+  bookUpdate = Books.objects.get(id=book.book.id)
   if book.isReturned == False:
     book.isReturned = True
     book.returnedOn = datetime.now()
+    bookUpdate.num_of_book += 1
+    bookUpdate.save()
     book.save()
     print(book.isReturned)
-    return Response({'details':'Book returned'})
+    return Response({'detail':'Book returned'})
   else:
-    return Response({'details':'Book already returned'}, status=status.HTTP_404_NOT_FOUND)
+    return Response({'detail':'Book already returned'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def bookHistory(request, pk):
+  book = Books.objects.get(id=pk)
+  historyOfBook = CollectedBooks.objects.filter(book=book)
+  serializer = CollectedBookSerializer(historyOfBook, many=True)
+  return Response(serializer.data)
