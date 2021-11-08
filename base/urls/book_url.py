@@ -7,6 +7,7 @@ urlpatterns = [
     path('<str:pk>/', views.getBook, name='get-book'),
     path('collect/<str:pk>/', views.collectBook, name='collect-book'),
     path('collected-by-user/<str:pk>/', views.collectBookByUserId, name='collected-book-user'),
+    path('return-book/<str:pk>/', views.returnBook, name='return-book'),
     path('update/<str:pk>/', views.updateBook, name='update-book'),
     path('delete/<str:pk>/', views.deleteBook, name='delete-book'),
 

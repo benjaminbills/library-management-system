@@ -1,9 +1,9 @@
 
 from django.db.models.fields import DateField
-from rest_framework import serializers
+from rest_framework import serializers, status
 from base.filters import BookFilter
 from base.models import Books, CollectedBooks, NewUser
-from datetime import date
+from datetime import date, datetime
 from base.serializers import BookSerializer, CollectedBookSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -88,3 +88,16 @@ def collectBookByUserId(request, pk):
   )
   serializer = CollectedBookSerializer(collectedBookByUser, many=True)
   return Response(serializer.data)
+
+@api_view(['PUT'])
+def returnBook(request, pk):
+  book = CollectedBooks.objects.get(id=pk)
+  print(book.isReturned==False)
+  if book.isReturned == False:
+    book.isReturned = True
+    book.returnedOn = datetime.now()
+    book.save()
+    print(book.isReturned)
+    return Response({'details':'Book returned'})
+  else:
+    return Response({'details':'Book already returned'}, status=status.HTTP_404_NOT_FOUND)

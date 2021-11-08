@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { returnBook } from "../../actions/bookActions";
 import { getUserProfile } from "../../actions/userActions";
+import { BOOK_RETURN_RESET } from "../../constants/bookConstant";
 import Books from "./Books";
 
-function Student() {
+function Student(props) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [studentId, setStudentId] = useState("");
@@ -13,17 +15,22 @@ function Student() {
   const { id } = useParams();
   const userProfile = useSelector((state) => state.userProfile);
   const { user } = userProfile;
-
+  const bookReturn = useSelector((state) => state.bookReturn);
+  const { success } = bookReturn;
   useEffect(() => {
-    if (!user) {
+    if (!user || success || user.id !== Number(id)) {
       dispatch(getUserProfile(id));
+      dispatch({ type: BOOK_RETURN_RESET });
     } else {
       setEmail(user.email);
       setName(user.user_name);
       setStudentId(user.id);
       setBooksCollected(user.booksCollected);
     }
-  }, [dispatch, id, user]);
+  }, [dispatch, id, user, success]);
+  const returnBookHandler = (id) => {
+    dispatch(returnBook(id));
+  };
   return (
     <div className="container">
       <div className="card mt-5 mb-5">
@@ -56,6 +63,14 @@ function Student() {
                   <td>{book.book.title}</td>
                   <td>{book.collectedOn}</td>
                   <td>{book.isReturned ? <p>yes</p> : <p>No</p>}</td>
+                  <td>
+                    <button
+                      className="btn btn-dark"
+                      onClick={(e) => returnBookHandler(book.id)}
+                    >
+                      Return Book
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

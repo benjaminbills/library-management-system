@@ -200,7 +200,7 @@ export const forgotPassword = (email) => async (dispatch) => {
 };
 
 export const registerStudent =
-  (username, email, studentId) => async (dispatch) => {
+  (email, username, studentId) => async (dispatch) => {
     try {
       dispatch({
         type: REGISTER_STUDENT_REQUEST,

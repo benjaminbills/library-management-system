@@ -17,6 +17,8 @@ import {
   BOOK_ASSIGNED_REQUEST,
   BOOK_ASSIGNED_SUCCESS,
   BOOK_ASSIGNED_FAIL,
+  BOOK_RETURN_SUCCESS,
+  BOOK_RETURN_FAIL,
 } from "../constants/bookConstant";
 
 export const getBooks =
@@ -179,6 +181,35 @@ export const assignBook = (studentId, bookId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: BOOK_ASSIGNED_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const returnBook = (collectedBookId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: BOOK_ASSIGNED_REQUEST,
+    });
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.put(
+      `api/book/return-book/${collectedBookId}/`,
+      config
+    );
+    dispatch({
+      type: BOOK_RETURN_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: BOOK_RETURN_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

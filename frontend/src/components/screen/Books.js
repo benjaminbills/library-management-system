@@ -8,6 +8,7 @@ import {
   deleteBook,
   getBooks,
 } from "../../actions/bookActions";
+import { getUserProfile } from "../../actions/userActions";
 import { ADD_BOOK_RESET } from "../../constants/bookConstant";
 import SearchBox from "./SearchBox";
 
@@ -47,6 +48,7 @@ function Books(props) {
   };
   const assignBookHandler = (id) => {
     dispatch(assignBook(props.studentId, id));
+    dispatch(getUserProfile(props.studentId));
   };
   useEffect(() => {
     dispatch({ type: ADD_BOOK_RESET });
