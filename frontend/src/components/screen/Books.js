@@ -10,6 +10,7 @@ import {
 } from "../../actions/bookActions";
 import { getUserProfile } from "../../actions/userActions";
 import { ADD_BOOK_RESET } from "../../constants/bookConstant";
+import Paginate from "../Paginate";
 import SearchBox from "./SearchBox";
 
 function Books(props) {
@@ -145,6 +146,7 @@ function Books(props) {
           ))}
         </tbody>
       </table>
+      <Paginate />
     </div>
   );
 }
