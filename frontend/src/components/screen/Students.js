@@ -178,7 +178,9 @@ function Students() {
             ))}
           </tbody>
         </table>
-        <Paginate search={search} page={page} pages={pages} />
+        <div className="pt-5">
+          <Paginate search={search} page={page} pages={pages} />
+        </div>
       </div>
     </div>
   );

@@ -60,7 +60,7 @@ def getUsers(request):
   page = request.query_params.get('page')
   print(page)
   users = userFilter.qs
-  paginator = Paginator(users, 3)
+  paginator = Paginator(users, 8)
   try:
     users = paginator.page(page)
   except PageNotAnInteger:
