@@ -31,8 +31,8 @@ function Students() {
   const emailSearchRef = useRef("");
   const [search, setSearch] = useState("");
   let location = useLocation();
-  let currentPage = location.search.split("&")[1];
-  console.log(currentPage);
+  let arrayLocation = location.search.split("&");
+  let currentPage = arrayLocation[arrayLocation.length - 1];
   const schoolIdSearchRef = useRef("");
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -62,29 +62,21 @@ function Students() {
     dispatch(registerStudent(email, username, schoolId));
   };
   useEffect(() => {
-    dispatch(getUsers(currentPage));
+    dispatch(getUsers());
     dispatch({ type: REGISTER_STUDENT_RESET });
-  }, [dispatch, currentPage]);
+  }, [dispatch]);
 
-  const idChangeHandler = (e) => {
+  const searchChangeHandler = (e) => {
     setSearch(
       `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
     );
-    dispatch(getUsers(search));
-  };
-  const usernameChangeHandler = (e) => {
-    setSearch(
-      `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
+    dispatch(
+      getUsers(
+        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
+      )
     );
-    dispatch(getUsers(search));
   };
-  console.log(schoolIdRef.current.value);
-  const emailChangeHandler = () => {
-    setSearch(
-      `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
-    );
-    dispatch(getUsers(search));
-  };
+
   return (
     <div>
       <div>
@@ -139,7 +131,7 @@ function Students() {
             <tr>
               <td>
                 <input
-                  onChange={idChangeHandler}
+                  onChange={searchChangeHandler}
                   className="form-control"
                   placeholder="ID"
                   ref={schoolIdRef}
@@ -147,7 +139,7 @@ function Students() {
               </td>
               <td>
                 <input
-                  onChange={usernameChangeHandler}
+                  onChange={searchChangeHandler}
                   className="form-control"
                   placeholder="Name"
                   ref={userNameSearchRef}
@@ -155,7 +147,7 @@ function Students() {
               </td>
               <td>
                 <input
-                  onChange={emailChangeHandler}
+                  onChange={searchChangeHandler}
                   className="form-control"
                   placeholder="Email"
                   ref={emailSearchRef}
