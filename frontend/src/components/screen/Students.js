@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { getUsers, registerStudent } from "../../actions/userActions";
 import { REGISTER_STUDENT_RESET } from "../../constants/userConstant";
+import Paginate from "../Paginate";
 
 const customStyles = {
   overlay: {
@@ -28,6 +29,10 @@ function Students() {
   const schoolIdRef = useRef("");
   const userNameSearchRef = useRef("");
   const emailSearchRef = useRef("");
+  const [search, setSearch] = useState("");
+  let location = useLocation();
+  let currentPage = location.search.split("&")[1];
+  console.log(currentPage);
   const schoolIdSearchRef = useRef("");
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -38,6 +43,8 @@ function Students() {
     success: userListSuccess,
     loading: userListLoading,
     students,
+    page,
+    pages,
   } = userList;
   const openModalHandler = () => {
     dispatch({ type: REGISTER_STUDENT_RESET });
@@ -55,32 +62,28 @@ function Students() {
     dispatch(registerStudent(email, username, schoolId));
   };
   useEffect(() => {
-    dispatch(getUsers());
+    dispatch(getUsers(currentPage));
     dispatch({ type: REGISTER_STUDENT_RESET });
-  }, [dispatch]);
+  }, [dispatch, currentPage]);
+
   const idChangeHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      getUsers(
-        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
-      )
+    setSearch(
+      `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
     );
+    dispatch(getUsers(search));
   };
   const usernameChangeHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      getUsers(
-        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
-      )
+    setSearch(
+      `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
     );
+    dispatch(getUsers(search));
   };
-  const emailChangeHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      getUsers(
-        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
-      )
+  console.log(schoolIdRef.current.value);
+  const emailChangeHandler = () => {
+    setSearch(
+      `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
     );
+    dispatch(getUsers(search));
   };
   return (
     <div>
@@ -183,6 +186,7 @@ function Students() {
             ))}
           </tbody>
         </table>
+        <Paginate search={search} page={page} pages={pages} />
       </div>
     </div>
   );

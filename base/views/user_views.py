@@ -58,16 +58,17 @@ def getUsers(request):
   users = NewUser.objects.filter(is_staff=False)
   userFilter = UserFilter(request.GET, queryset=users)
   page = request.query_params.get('page')
+  print(page)
   users = userFilter.qs
-  paginator = Paginator(users, 80)
+  paginator = Paginator(users, 3)
   try:
-    users = paginator.page('')
+    users = paginator.page(page)
   except PageNotAnInteger:
     users = paginator.page(1)
   except EmptyPage:
     users = paginator.page(paginator.num_pages)
   if page == None:
-    page == 1
+    page = 1
   page = int(page)
   serializer = UserSerializer(users, many=True)
   return Response({'users':serializer.data, 'page':page, 'pages':paginator.num_pages})

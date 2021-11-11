@@ -248,7 +248,7 @@ export const getUsers =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`api/user/?${search}&page=1`, config);
+      const { data } = await axios.get(`api/user/?${search}`, config);
       console.log(data);
       dispatch({ type: USER_LIST_SUCCESS, payload: data });
     } catch (error) {
