@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
@@ -15,26 +15,21 @@ import SearchBox from "./SearchBox";
 
 function Books(props) {
   const history = useHistory();
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const authorRef = useRef("");
   const titleRef = useRef("");
   const bookList = useSelector((state) => state.bookList);
-  const { loading, error, books } = bookList;
+  const { loading, error, books, page, pages } = bookList;
   const addB = useSelector((state) => state.addBook);
   const { success: successCreate, loading: addBookLoading, book } = addB;
   let location = history.location.pathname;
   let renderEditAndDelete = location === "/books";
 
-  const titleChangeHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      getBooks(
-        `title=${titleRef.current.value}&author=${authorRef.current.value}`
-      )
+  const searchChangeHandler = () => {
+    setSearch(
+      `title=${titleRef.current.value}&author=${authorRef.current.value}`
     );
-  };
-  const authorChangeHandler = (e) => {
-    e.preventDefault();
     dispatch(
       getBooks(
         `title=${titleRef.current.value}&author=${authorRef.current.value}`
@@ -72,6 +67,24 @@ function Books(props) {
   const addBookHandler = () => {
     dispatch(addBook());
   };
+  const changePageHandler = (selectedPage) => {
+    dispatch(getBooks(`${search}&page=${selectedPage}`));
+  };
+
+  const nextPageHandler = () => {
+    if (page < pages) {
+      dispatch(getBooks(`${search}&page=${page + 1}`));
+    } else {
+      dispatch(getBooks(`${search}&page=${pages}`));
+    }
+  };
+  const previousPageHandler = () => {
+    if (page > 1) {
+      dispatch(getBooks(`${search}&page=${page - 1}`));
+    } else {
+      dispatch(getBooks(`${search}&page=1`));
+    }
+  };
   return (
     <div>
       <h2>Books</h2>
@@ -93,7 +106,7 @@ function Books(props) {
           <tr>
             <td>
               <input
-                onChange={titleChangeHandler}
+                onChange={searchChangeHandler}
                 className="form-control"
                 placeholder="Title"
                 ref={titleRef}
@@ -101,7 +114,7 @@ function Books(props) {
             </td>
             <td>
               <input
-                onChange={authorChangeHandler}
+                onChange={searchChangeHandler}
                 className="form-control"
                 placeholder="Author"
                 ref={authorRef}
@@ -146,7 +159,13 @@ function Books(props) {
           ))}
         </tbody>
       </table>
-      <Paginate />
+      <Paginate
+        page={page}
+        pages={pages}
+        onChangePage={changePageHandler}
+        nextPage={nextPageHandler}
+        previousPage={previousPageHandler}
+      />
     </div>
   );
 }

@@ -23,17 +23,14 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-function Students() {
+function Students(props) {
   const usernameRef = useRef("");
   const emailRef = useRef("");
   const schoolIdRef = useRef("");
   const userNameSearchRef = useRef("");
   const emailSearchRef = useRef("");
   const [search, setSearch] = useState("");
-  let location = useLocation();
-  let arrayLocation = location.search.split("&");
-  let currentPage = arrayLocation[arrayLocation.length - 1];
-  const schoolIdSearchRef = useRef("");
+
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const studentRegister = useSelector((state) => state.studentRegister);
@@ -77,6 +74,24 @@ function Students() {
     );
   };
 
+  const changePageHandler = (selectedPage) => {
+    dispatch(getUsers(`${search}&page=${selectedPage}`));
+  };
+
+  const nextPageHandler = () => {
+    if (page < pages) {
+      dispatch(getUsers(`${search}&page=${page + 1}`));
+    } else {
+      dispatch(getUsers(`${search}&page=${pages}`));
+    }
+  };
+  const previousPageHandler = () => {
+    if (page > 1) {
+      dispatch(getUsers(`${search}&page=${page - 1}`));
+    } else {
+      dispatch(getUsers(`${search}&page=1`));
+    }
+  };
   return (
     <div>
       <div>
@@ -179,7 +194,13 @@ function Students() {
           </tbody>
         </table>
         <div className="pt-5">
-          <Paginate search={search} page={page} pages={pages} />
+          <Paginate
+            page={page}
+            pages={pages}
+            onChangePage={changePageHandler}
+            nextPage={nextPageHandler}
+            previousPage={previousPageHandler}
+          />
         </div>
       </div>
     </div>

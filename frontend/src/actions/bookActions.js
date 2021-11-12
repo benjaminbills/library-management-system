@@ -32,7 +32,7 @@ export const getBooks =
         type: BOOK_LIST_REQUEST,
       });
 
-      const { data } = await axios.get(`api/book/?${search}&page=1`);
+      const { data } = await axios.get(`api/book/?${search}`);
       dispatch({
         type: BOOK_LIST_SUCCESS,
         payload: data,

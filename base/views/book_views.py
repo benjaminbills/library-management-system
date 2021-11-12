@@ -17,15 +17,15 @@ def getBooks(request):
   bookFilter = BookFilter(request.GET, queryset=books)
   page = request.query_params.get('page')
   books = bookFilter.qs
-  paginator = Paginator(books, 80)
+  paginator = Paginator(books, 10)
   try:
-    books = paginator.page('')
+    books = paginator.page(page)
   except PageNotAnInteger:
     books = paginator.page(1)
   except EmptyPage:
     books = paginator.page(paginator.num_pages)
   if page == None:
-    page == 1
+    page = 1
   page = int(page)
   serializer = BookSerializer(books, many=True)
   return Response({'books':serializer.data, 'page':page, 'pages':paginator.num_pages})
