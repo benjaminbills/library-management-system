@@ -8,6 +8,7 @@ function EditBook() {
   const [bookTitle, setBookTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState("");
+  const [subject, setSubject] = useState("");
   const [numAvailable, setNumAvailable] = useState("");
   const params = useParams();
   const history = useHistory();
@@ -33,6 +34,7 @@ function EditBook() {
         setAuthor(book.author);
         setPublished(book.published);
         setNumAvailable(book.num_of_book);
+        setSubject(book.subject);
       }
     }
   }, [bookId, dispatch, book, successUpdate, history]);
@@ -44,6 +46,7 @@ function EditBook() {
         id: bookId,
         title: bookTitle,
         author,
+        subject,
         published,
         num_of_book: numAvailable,
       })
@@ -73,6 +76,15 @@ function EditBook() {
             value={author}
             className="form-control"
             onChange={(e) => setAuthor(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label>Subject</label>
+          <input
+            className="form-control form-control-date"
+            type="text"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
           />
         </div>
         <div className="mb-3">

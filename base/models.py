@@ -58,6 +58,7 @@ class Books(models.Model):
     user = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True )
     title = models.CharField(max_length=500)
     author = models.CharField(max_length=500)
+    subject = models.CharField(max_length=50, null=True, blank=True,)
     published = models.DateField()
     image = models.ImageField(null=True, blank=True)
     num_of_book = models.IntegerField(null=True, blank=True, default=0)

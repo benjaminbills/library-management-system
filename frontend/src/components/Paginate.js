@@ -1,8 +1,4 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { getUsers } from "../actions/userActions";
-import { useHistory, useLocation } from "react-router-dom";
+import React from "react";
 
 function Paginate({ pages, page, onChangePage, nextPage, previousPage }) {
   const changePageHandler = (p) => {

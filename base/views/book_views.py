@@ -57,6 +57,7 @@ def updateBook(request, pk):
   book.author = data['author']
   book.published = data['published']
   book.num_of_book = data['num_of_book']
+  book.subject = data['subject']
   book.save()
   serializer = BookSerializer(book, many=False)
   return Response(serializer.data)

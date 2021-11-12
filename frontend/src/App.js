@@ -17,7 +17,6 @@ function App() {
     <Router>
       <Header />
       <div>
-        <Route path="/" component={Home} exact />
         <Route path="/login" component={Login} exact />
         <Route path="/register" component={Register} exact />
         <Route path="/forgotpassword" component={ForgotPassword} exact />

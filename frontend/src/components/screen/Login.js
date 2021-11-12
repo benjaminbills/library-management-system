@@ -23,7 +23,7 @@ function Login() {
   const { error, loading, userInfo } = userLogin;
   useEffect(() => {
     if (userInfo) {
-      history.push("/");
+      history.push("/students");
     }
   }, [userInfo, history]);
   return (

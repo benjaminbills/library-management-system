@@ -36,7 +36,7 @@ class UserSerializerWithToken(UserSerializer):
 class BookSerializer(serializers.ModelSerializer):
   class Meta:
     model = Books
-    fields = ['id', 'title', 'author', 'published', 'image', 'num_of_book']
+    fields = ['id', 'title', 'author', 'published', 'image', 'num_of_book', 'subject']
 
 class CollectedBookSerializer(serializers.ModelSerializer):
   book = serializers.SerializerMethodField(read_only=True)

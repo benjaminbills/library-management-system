@@ -11,7 +11,6 @@ import {
 import { getUserProfile } from "../../actions/userActions";
 import { ADD_BOOK_RESET } from "../../constants/bookConstant";
 import Paginate from "../Paginate";
-import SearchBox from "./SearchBox";
 
 function Books(props) {
   const history = useHistory();
@@ -19,6 +18,7 @@ function Books(props) {
   const dispatch = useDispatch();
   const authorRef = useRef("");
   const titleRef = useRef("");
+  const subjectRef = useRef("");
   const bookList = useSelector((state) => state.bookList);
   const { loading, error, books, page, pages } = bookList;
   const addB = useSelector((state) => state.addBook);
@@ -28,11 +28,11 @@ function Books(props) {
 
   const searchChangeHandler = () => {
     setSearch(
-      `title=${titleRef.current.value}&author=${authorRef.current.value}`
+      `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
     );
     dispatch(
       getBooks(
-        `title=${titleRef.current.value}&author=${authorRef.current.value}`
+        `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
       )
     );
   };
@@ -47,7 +47,7 @@ function Books(props) {
     dispatch(getUserProfile(props.studentId));
     dispatch(
       getBooks(
-        `title=${titleRef.current.value}&author=${authorRef.current.value}`
+        `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
       )
     );
   };
@@ -58,7 +58,7 @@ function Books(props) {
     } else {
       dispatch(
         getBooks(
-          `title=${titleRef.current.value}&author=${authorRef.current.value}`
+          `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
         )
       );
     }
@@ -96,6 +96,7 @@ function Books(props) {
           <tr>
             <th scope="col">Title</th>
             <th scope="col">Author</th>
+            <th scope="col">Subject</th>
             <th scope="col">Published</th>
             <th scope="col">Available</th>
             <th scope="col"></th>
@@ -120,6 +121,14 @@ function Books(props) {
                 ref={authorRef}
               />
             </td>
+            <td>
+              <input
+                onChange={searchChangeHandler}
+                className="form-control"
+                placeholder="Author"
+                ref={subjectRef}
+              />
+            </td>
           </tr>
           {books.map((book) => (
             <tr key={book.id}>
@@ -127,6 +136,7 @@ function Books(props) {
                 <Link to={`/books/${book.id}`}>{book.title}</Link>
               </td>
               <td>{book.author}</td>
+              <td>{book.subject}</td>
               <td>{book.published}</td>
               <td>{book.num_of_book}</td>
               {renderEditAndDelete && (

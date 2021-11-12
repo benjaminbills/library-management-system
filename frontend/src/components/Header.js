@@ -23,11 +23,11 @@ function Header() {
               {userInfo.user_name}
             </Link>
           )}
-          <Link className="nav-link" to="/">
-            Home
-          </Link>
           <Link className="nav-link" to="/students">
             Students
+          </Link>
+          <Link className="nav-link" to="/books">
+            Books
           </Link>
           {!userInfo && (
             <Link className="nav-link" to="/login">
