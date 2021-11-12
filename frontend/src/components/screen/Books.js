@@ -40,7 +40,7 @@ function Books(props) {
     if (window.confirm("Are you sure you want to delete this product")) {
       dispatch(deleteBook(id));
     }
-    window.location.reload();
+    window.location.reloader();
   };
   const assignBookHandler = (id) => {
     dispatch(assignBook(props.studentId, id));
