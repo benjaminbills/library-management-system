@@ -28,6 +28,9 @@ import {
   BOOK_HISTORY_SUCCESS,
   BOOK_HISTORY_FAIL,
   BOOK_HISTORY_RESET,
+  BOOK_COLLECTED_REQUEST,
+  BOOK_COLLECTED_SUCCESS,
+  BOOK_COLLECTED_FAIL,
 } from "../constants/bookConstant";
 
 export const bookListReducer = (state = { books: [] }, action) => {
@@ -144,6 +147,23 @@ export const bookHistoryReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case BOOK_HISTORY_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const booksCollectedReducer = (state = { books: [] }, action) => {
+  switch (action.type) {
+    case BOOK_COLLECTED_REQUEST:
+      return { loading: true, books: [] };
+    case BOOK_COLLECTED_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        books: action.payload,
+      };
+    case BOOK_COLLECTED_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

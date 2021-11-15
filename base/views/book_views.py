@@ -1,5 +1,6 @@
 
 from django.db.models.fields import DateField
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import serializers, status
 from base.filters import BookFilter
 from base.models import Books, CollectedBooks, NewUser
@@ -31,6 +32,7 @@ def getBooks(request):
   return Response({'books':serializer.data, 'page':page, 'pages':paginator.num_pages})
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def addBook(request):
   user = request.user
   book = Books.objects.create(
@@ -50,6 +52,7 @@ def getBook(request, pk):
   return Response(serializer.data)
 
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def updateBook(request, pk):
   book = Books.objects.get(id=pk)
   data = request.data
@@ -63,12 +66,14 @@ def updateBook(request, pk):
   return Response(serializer.data)
 
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def deleteBook(request, pk):
   book = Books.objects.get(id=pk)
   book.delete()
   return Response('book was deleted successfully')
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def collectBook(request, pk):
   user = NewUser.objects.get(id=pk)
   data=request.data
@@ -98,6 +103,7 @@ def collectBookByUserId(request, pk):
   return Response(serializer.data)
 
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def returnBook(request, pk):
   book = CollectedBooks.objects.get(id=pk)
   bookUpdate = Books.objects.get(id=book.book.id)
@@ -117,4 +123,10 @@ def bookHistory(request, pk):
   book = Books.objects.get(id=pk)
   historyOfBook = CollectedBooks.objects.filter(book=book)
   serializer = CollectedBookSerializer(historyOfBook, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+def collectedBooks(request):
+  collectedBooks = CollectedBooks.objects.all()
+  serializer = CollectedBookSerializer(collectedBooks, many=True)
   return Response(serializer.data)

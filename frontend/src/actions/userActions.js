@@ -200,14 +200,18 @@ export const forgotPassword = (email) => async (dispatch) => {
 };
 
 export const registerStudent =
-  (email, username, studentId) => async (dispatch) => {
+  (email, username, studentId) => async (dispatch, getState) => {
     try {
       dispatch({
         type: REGISTER_STUDENT_REQUEST,
       });
+      const {
+        userLogin: { userInfo },
+      } = getState();
       const config = {
         headers: {
           "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
         },
       };
       const { data } = await axios.post(

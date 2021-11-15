@@ -22,6 +22,9 @@ import {
   BOOK_HISTORY_REQUEST,
   BOOK_HISTORY_SUCCESS,
   BOOK_HISTORY_FAIL,
+  BOOK_COLLECTED_REQUEST,
+  BOOK_COLLECTED_SUCCESS,
+  BOOK_COLLECTED_FAIL,
 } from "../constants/bookConstant";
 
 export const getBooks =
@@ -78,14 +81,18 @@ export const addBook = () => async (dispatch, getState) => {
   }
 };
 
-export const getBookDetails = (id) => async (dispatch) => {
+export const getBookDetails = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: BOOK_DETAILS_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.get(`api/book/${id}/`, config);
@@ -104,14 +111,18 @@ export const getBookDetails = (id) => async (dispatch) => {
   }
 };
 
-export const updateBook = (book) => async (dispatch) => {
+export const updateBook = (book) => async (dispatch, getState) => {
   try {
     dispatch({
       type: BOOK_UPDATE_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.put(
@@ -134,14 +145,18 @@ export const updateBook = (book) => async (dispatch) => {
   }
 };
 
-export const deleteBook = (id) => async (dispatch) => {
+export const deleteBook = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: BOOK_DELETE_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.delete(`api/book/delete/${id}/`, config);
@@ -160,14 +175,18 @@ export const deleteBook = (id) => async (dispatch) => {
   }
 };
 
-export const assignBook = (studentId, bookId) => async (dispatch) => {
+export const assignBook = (studentId, bookId) => async (dispatch, getState) => {
   try {
     dispatch({
       type: BOOK_ASSIGNED_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.post(
@@ -192,14 +211,18 @@ export const assignBook = (studentId, bookId) => async (dispatch) => {
   }
 };
 
-export const returnBook = (collectedBookId) => async (dispatch) => {
+export const returnBook = (collectedBookId) => async (dispatch, getState) => {
   try {
     dispatch({
       type: BOOK_ASSIGNED_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.put(
@@ -221,14 +244,18 @@ export const returnBook = (collectedBookId) => async (dispatch) => {
   }
 };
 
-export const bookHistory = (bookId) => async (dispatch) => {
+export const bookHistory = (bookId) => async (dispatch, getState) => {
   try {
     dispatch({
       type: BOOK_HISTORY_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.get(`api/book/history/${bookId}/`, config);
@@ -239,6 +266,36 @@ export const bookHistory = (bookId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: BOOK_HISTORY_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const booksCollected = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: BOOK_COLLECTED_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`api/book/collected-books/`, config);
+    dispatch({
+      type: BOOK_COLLECTED_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: BOOK_COLLECTED_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

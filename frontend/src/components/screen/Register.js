@@ -69,8 +69,8 @@ function Register() {
           />
         </div>
 
-        <button type="submit" className="btn btn-success mb-3">
-          Login
+        <button type="submit" className="btn btn-dark mb-3">
+          Register
         </button>
         <p>
           Already have an account? <Link to="/login">Login</Link>

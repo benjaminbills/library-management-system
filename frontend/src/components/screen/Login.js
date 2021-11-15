@@ -41,7 +41,7 @@ function Login() {
           <input type="password" ref={passwordRef} className="form-control" />
         </div>
 
-        <button type="submit" className="btn btn-success mb-3">
+        <button type="submit" className="btn btn-dark mb-3">
           Login
         </button>
         <p>

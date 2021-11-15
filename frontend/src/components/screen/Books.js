@@ -10,6 +10,7 @@ import {
 } from "../../actions/bookActions";
 import { getUserProfile } from "../../actions/userActions";
 import { ADD_BOOK_RESET } from "../../constants/bookConstant";
+import Loader from "../Loader";
 import Paginate from "../Paginate";
 
 function Books(props) {
@@ -87,6 +88,7 @@ function Books(props) {
   };
   return (
     <div>
+      {loading && <Loader />}
       <h2>Books</h2>
       <button className="btn btn-dark" onClick={addBookHandler}>
         Add Books
@@ -125,7 +127,7 @@ function Books(props) {
               <input
                 onChange={searchChangeHandler}
                 className="form-control"
-                placeholder="Author"
+                placeholder="Subject"
                 ref={subjectRef}
               />
             </td>

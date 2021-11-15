@@ -101,7 +101,7 @@ function Profile() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
-        <button className="btn btn-success">Submit</button>
+        <button className="btn btn-dark">Submit</button>
       </form>
     </div>
   );

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getUsers, registerStudent } from "../../actions/userActions";
 import { REGISTER_STUDENT_RESET } from "../../constants/userConstant";
+import Loader from "../Loader";
 import Paginate from "../Paginate";
 
 const customStyles = {
@@ -40,6 +41,7 @@ function Students(props) {
     success: userListSuccess,
     loading: userListLoading,
     students,
+    error: userListError,
     page,
     pages,
   } = userList;
@@ -126,9 +128,9 @@ function Students(props) {
               <label className="form-label">Email</label>
               <input type="email" className="form-control" ref={emailRef} />
             </div>
-            <button>Submit</button>
+            <button className="btn btn-dark">Submit</button>
           </form>
-          <button className="btn btn-warning" onClick={closeModalHandler}>
+          <button className="btn btn-secondary" onClick={closeModalHandler}>
             Close
           </button>
         </Modal>

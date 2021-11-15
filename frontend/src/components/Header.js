@@ -26,6 +26,9 @@ function Header() {
           <Link className="nav-link" to="/students">
             Students
           </Link>
+          <Link className="nav-link" to="/collectedbooks">
+            Library
+          </Link>
           <Link className="nav-link" to="/books">
             Books
           </Link>
