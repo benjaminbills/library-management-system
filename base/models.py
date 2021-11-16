@@ -1,9 +1,9 @@
 from django.db import models
+from django.db.models.fields import IntegerField
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, User
 from django_filters.filters import _truncate
-
 
 class CustomAccountManager(BaseUserManager):
 
@@ -63,8 +63,14 @@ class Books(models.Model):
     image = models.ImageField(null=True, blank=True)
     num_of_book = models.IntegerField(null=True, blank=True, default=0)
 
+class Student(models.Model):
+    name = models.CharField(max_length=200)
+    admission_num = models.CharField(max_length=100, unique=True)
+    class_detail = models.CharField(max_length=100)
+    phone = IntegerField(null=True, blank=True, unique=False)
+
 class CollectedBooks(models.Model):
-    user = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True )
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True )
     book = models.ForeignKey(Books, on_delete=models.SET_NULL, null=True)
     collectedOn = models.DateTimeField(auto_now_add=True)
     returnedOn = models.DateTimeField(null=True, blank=True)

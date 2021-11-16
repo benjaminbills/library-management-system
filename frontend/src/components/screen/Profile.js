@@ -22,7 +22,7 @@ function Profile() {
     if (!userInfo) {
       history.push("/login");
     } else {
-      if (!user) {
+      if (!user || userInfo.id !== user.id) {
         dispatch(getUserProfile(id));
       } else {
         setEmail(user.email);

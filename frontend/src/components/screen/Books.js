@@ -8,6 +8,7 @@ import {
   deleteBook,
   getBooks,
 } from "../../actions/bookActions";
+import { getStudentProfile } from "../../actions/studentAction";
 import { getUserProfile } from "../../actions/userActions";
 import { ADD_BOOK_RESET } from "../../constants/bookConstant";
 import Loader from "../Loader";
@@ -45,7 +46,7 @@ function Books(props) {
   };
   const assignBookHandler = (id) => {
     dispatch(assignBook(props.studentId, id));
-    dispatch(getUserProfile(props.studentId));
+    dispatch(getStudentProfile(props.studentId));
     dispatch(
       getBooks(
         `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
@@ -100,7 +101,6 @@ function Books(props) {
             <th scope="col">Author</th>
             <th scope="col">Subject</th>
             <th scope="col">Published</th>
-            <th scope="col">Available</th>
             <th scope="col"></th>
             <th scope="col"></th>
           </tr>
@@ -140,7 +140,6 @@ function Books(props) {
               <td>{book.author}</td>
               <td>{book.subject}</td>
               <td>{book.published}</td>
-              <td>{book.num_of_book}</td>
               {renderEditAndDelete && (
                 <td>
                   <button

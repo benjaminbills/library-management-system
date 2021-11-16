@@ -18,11 +18,6 @@ function Header() {
         </button>
 
         <div className="navbar-nav">
-          {userInfo && (
-            <Link className="nav-link" to={`/profile/${userInfo.id}`}>
-              {userInfo.user_name}
-            </Link>
-          )}
           <Link className="nav-link" to="/students">
             Students
           </Link>

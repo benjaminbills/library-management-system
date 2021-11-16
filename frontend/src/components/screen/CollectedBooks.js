@@ -36,7 +36,7 @@ function CollectedBooks() {
         <tbody>
           {books.map((book) => (
             <tr key={book.id}>
-              <td>{book.user.user_name}</td>
+              <td>{book.student.name}</td>
               <td>{book.book.title}</td>
               <td>{book.book.author}</td>
               <td>{book.isReturned ? <p>yes</p> : <p>No</p>}</td>

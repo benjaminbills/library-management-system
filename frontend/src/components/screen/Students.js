@@ -1,9 +1,10 @@
+import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { getUsers, registerStudent } from "../../actions/userActions";
-import { REGISTER_STUDENT_RESET } from "../../constants/userConstant";
+import { getStudents, registerStudent } from "../../actions/studentAction";
+import { STUDENT_RESGISTER_RESET } from "../../constants/studentConstant";
 import Loader from "../Loader";
 import Paginate from "../Paginate";
 
@@ -26,17 +27,22 @@ Modal.setAppElement("#root");
 
 function Students(props) {
   const usernameRef = useRef("");
-  const emailRef = useRef("");
+  const nameRef = useRef("");
+  const phoneRef = useRef("");
+  const classDetailRef = useRef("");
+  const admissionNumRef = useRef("");
   const schoolIdRef = useRef("");
   const userNameSearchRef = useRef("");
-  const emailSearchRef = useRef("");
+  const classSearchRef = useRef("");
   const [search, setSearch] = useState("");
-
+  const [excelFile, setExcelFile] = useState("");
+  const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [showHide, setShowHide] = useState(false);
   const studentRegister = useSelector((state) => state.studentRegister);
   const { success, loading, studentInfo, error } = studentRegister;
-  const userList = useSelector((state) => state.userList);
+  const studentList = useSelector((state) => state.studentList);
   const {
     success: userListSuccess,
     loading: userListLoading,
@@ -44,63 +50,109 @@ function Students(props) {
     error: userListError,
     page,
     pages,
-  } = userList;
+  } = studentList;
   const openModalHandler = () => {
-    dispatch({ type: REGISTER_STUDENT_RESET });
+    dispatch({ type: STUDENT_RESGISTER_RESET });
     setOpen(true);
   };
   const closeModalHandler = () => {
     setOpen(false);
-    dispatch({ type: REGISTER_STUDENT_RESET });
+    dispatch({ type: STUDENT_RESGISTER_RESET });
   };
   const registerStudentHandler = (e) => {
     e.preventDefault();
-    let email = emailRef.current.value;
-    let username = usernameRef.current.value;
-    let schoolId = schoolIdRef.current.value;
-    dispatch(registerStudent(email, username, schoolId));
+    let name = nameRef.current.value;
+    let admissionNum = admissionNumRef.current.value;
+    let classDetail = classDetailRef.current.value;
+    let phone = phoneRef.current.value;
+    dispatch(registerStudent(name, admissionNum, classDetail, phone));
   };
   useEffect(() => {
-    dispatch(getUsers());
-    dispatch({ type: REGISTER_STUDENT_RESET });
+    dispatch(getStudents());
+    dispatch({ type: STUDENT_RESGISTER_RESET });
   }, [dispatch]);
 
   const searchChangeHandler = (e) => {
     setSearch(
-      `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
+      `admission_num=${schoolIdRef.current.value}&name=${userNameSearchRef.current.value}&email=${classSearchRef.current.value}`
     );
     dispatch(
-      getUsers(
-        `id=${schoolIdRef.current.value}&user_name=${userNameSearchRef.current.value}&email=${emailSearchRef.current.value}`
+      getStudents(
+        `admission_num=${schoolIdRef.current.value}&name=${userNameSearchRef.current.value}&email=${classSearchRef.current.value}`
       )
     );
   };
-
+  const showHideUpload = () => {
+    if (showHide) {
+      setShowHide(false);
+    } else {
+      setShowHide(true);
+    }
+  };
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("students", file);
+    setUploading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.post(
+        "/api/student/upload-excel/",
+        formData,
+        config
+      );
+      setUploading(false);
+    } catch (error) {
+      setUploading(false);
+    }
+  };
   const changePageHandler = (selectedPage) => {
-    dispatch(getUsers(`${search}&page=${selectedPage}`));
+    dispatch(getStudents(`${search}&page=${selectedPage}`));
   };
 
   const nextPageHandler = () => {
     if (page < pages) {
-      dispatch(getUsers(`${search}&page=${page + 1}`));
+      dispatch(getStudents(`${search}&page=${page + 1}`));
     } else {
-      dispatch(getUsers(`${search}&page=${pages}`));
+      dispatch(getStudents(`${search}&page=${pages}`));
     }
   };
   const previousPageHandler = () => {
     if (page > 1) {
-      dispatch(getUsers(`${search}&page=${page - 1}`));
+      dispatch(getStudents(`${search}&page=${page - 1}`));
     } else {
-      dispatch(getUsers(`${search}&page=1`));
+      dispatch(getStudents(`${search}&page=1`));
     }
   };
+
   return (
     <div>
       <div>
         <h2>Books</h2>
-        <button className="btn btn-dark" onClick={openModalHandler}>
+        <button className="btn btn-dark my-4" onClick={openModalHandler}>
           Register Student
         </button>
+        <button className="btn btn-success" onClick={showHideUpload}>
+          Upload Excel
+        </button>
+        {showHide && (
+          <div class="mb-3">
+            <label htmlFor="formFile" class="form-label">
+              Upload Students In Excel Format
+            </label>
+            <input
+              class="form-control"
+              type="file"
+              id="formFile"
+              onChange={(e) => uploadFileHandler(e)}
+            />
+          </div>
+        )}
+        {uploading && <Loader />}
         <Modal
           closeTimeoutMS={200}
           style={customStyles}
@@ -112,21 +164,33 @@ function Students(props) {
           {success && (
             <p>
               You have successfully created an account for student{" "}
-              {studentInfo.email}
+              {studentInfo.name} id {studentInfo.admission_num}
             </p>
           )}
           <form onSubmit={registerStudentHandler}>
             <div className="mb-3">
-              <label className="form-label">School ID</label>
-              <input type="text" className="form-control" ref={schoolIdRef} />
+              <label className="form-label">Name</label>
+              <input type="text" className="form-control" ref={nameRef} />
             </div>
             <div className="mb-3">
-              <label className="form-label">Username</label>
-              <input type="text" className="form-control" ref={usernameRef} />
+              <label className="form-label">Admission number</label>
+              <input
+                type="text"
+                className="form-control"
+                ref={admissionNumRef}
+              />
             </div>
             <div className="mb-3">
-              <label className="form-label">Email</label>
-              <input type="email" className="form-control" ref={emailRef} />
+              <label className="form-label">Class Details</label>
+              <input
+                type="text"
+                className="form-control"
+                ref={classDetailRef}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Phone</label>
+              <input type="number" className="form-control" ref={phoneRef} />
             </div>
             <button className="btn btn-dark">Submit</button>
           </form>
@@ -137,10 +201,10 @@ function Students(props) {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th scope="col">ID</th>
+              <th scope="col">Admission Num</th>
               <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Collected Books</th>
+              <th scope="col">Class</th>
+              <th scope="col">Phone</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -167,18 +231,19 @@ function Students(props) {
                   onChange={searchChangeHandler}
                   className="form-control"
                   placeholder="Email"
-                  ref={emailSearchRef}
+                  ref={classSearchRef}
                 />
               </td>
             </tr>
 
             {students.map((student) => (
-              <tr key={student.id}>
-                <td>{student.id}</td>
-                <td>{student.user_name}</td>
-                <td>{student.email}</td>
+              <tr key={student.admission_num}>
+                <td>{student.admission_num}</td>
+                <td>{student.name}</td>
+                <td>{student.class_detail}</td>
+                <td>{student.phone}</td>
                 <td>
-                  <Link to={`/students/${student.id}`}>
+                  <Link to={`/students/${student.admission_num}`}>
                     <button className="btn btn-dark">Assign Book</button>
                   </Link>
                 </td>

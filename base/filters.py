@@ -1,5 +1,6 @@
 from django.db.models import fields
-from .models import Books
+from django_filters.filters import NumberFilter
+from .models import Books, Student
 import django_filters
 from django_filters import CharFilter
 
@@ -17,4 +18,13 @@ class UserFilter(django_filters.FilterSet):
   email= CharFilter(field_name='email', lookup_expr='icontains')
   class Meta:
     model = Books
-    fields = 'title', 'author'
+    fields = 'user_name', 'email'
+
+class StudentFilter(django_filters.FilterSet):
+  name = CharFilter(field_name='name', lookup_expr='icontains')
+  admission_num= CharFilter(field_name='admission_num', lookup_expr='icontains')
+  class_detail= CharFilter(field_name='class_detail', lookup_expr='icontains')
+  phone = NumberFilter(field_name='phone', lookup_expr='icontains')
+  class Meta:
+    model = Student
+    fields = 'name', 'admission_num','class_detail','phone'

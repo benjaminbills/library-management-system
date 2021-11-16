@@ -3,7 +3,7 @@ from django.db.models.fields import DateField
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import serializers, status
 from base.filters import BookFilter
-from base.models import Books, CollectedBooks, NewUser
+from base.models import Books, CollectedBooks, NewUser, Student
 from datetime import date, datetime
 from base.serializers import BookSerializer, CollectedBookSerializer
 from rest_framework.decorators import api_view, permission_classes
@@ -75,13 +75,13 @@ def deleteBook(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def collectBook(request, pk):
-  user = NewUser.objects.get(id=pk)
+  student = Student.objects.get(admission_num=pk)
   data=request.data
   book = Books.objects.get(id=data['bookId'])
   
   if book.num_of_book >= 1:
       collectedBook = CollectedBooks.objects.create(
-        user = user,
+        student = student,
         book = book
       )
       book.num_of_book -= 1
@@ -103,7 +103,7 @@ def collectBookByUserId(request, pk):
   return Response(serializer.data)
 
 @api_view(['PUT'])
-@permission_classes([IsAdminUser])
+# @permission_classes([IsAdminUser])
 def returnBook(request, pk):
   book = CollectedBooks.objects.get(id=pk)
   bookUpdate = Books.objects.get(id=book.book.id)

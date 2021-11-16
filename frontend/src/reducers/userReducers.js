@@ -101,20 +101,20 @@ export const userForgotPasswordReducer = (
   }
 };
 
-export const studentRegisterReducer = (state = {}, action) => {
-  switch (action.type) {
-    case REGISTER_STUDENT_REQUEST:
-      return { loading: true, success: false };
-    case REGISTER_STUDENT_SUCCESS:
-      return { loading: false, success: true, studentInfo: action.payload };
-    case REGISTER_STUDENT_FAIL:
-      return { loading: false, error: action.payload };
-    case REGISTER_STUDENT_RESET:
-      return {};
-    default:
-      return state;
-  }
-};
+// export const studentRegisterReducer = (state = {}, action) => {
+//   switch (action.type) {
+//     case REGISTER_STUDENT_REQUEST:
+//       return { loading: true, success: false };
+//     case REGISTER_STUDENT_SUCCESS:
+//       return { loading: false, success: true, studentInfo: action.payload };
+//     case REGISTER_STUDENT_FAIL:
+//       return { loading: false, error: action.payload };
+//     case REGISTER_STUDENT_RESET:
+//       return {};
+//     default:
+//       return state;
+//   }
+// };
 
 export const userListReducer = (state = { students: [] }, action) => {
   switch (action.type) {
