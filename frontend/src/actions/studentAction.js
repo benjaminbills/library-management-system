@@ -32,7 +32,7 @@ export const uploadStudent = (book) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.put(
-      `api/book/update/${book.id}/`,
+      `https://studentlibrary100.herokuapp.com/api/book/update/${book.id}/`,
       book,
       config
     );
@@ -65,7 +65,10 @@ export const getStudents =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`api/student/?${search}`, config);
+      const { data } = await axios.get(
+        `https://studentlibrary100.herokuapp.com/api/student/?${search}`,
+        config
+      );
       console.log(data);
       dispatch({ type: STUDENT_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -95,7 +98,7 @@ export const registerStudent =
         },
       };
       const { data } = await axios.post(
-        "api/student/register/",
+        "https://studentlibrary100.herokuapp.com/api/student/register/",
         {
           name: name,
           admission_num: admission_num,
@@ -131,7 +134,10 @@ export const getStudentProfile = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`api/student/${id}/`, config);
+    const { data } = await axios.get(
+      `https://studentlibrary100.herokuapp.com/api/student/${id}/`,
+      config
+    );
     dispatch({ type: STUDENT_PROFILE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -162,7 +168,7 @@ export const updateStudentProfile =
         },
       };
       const { data } = await axios.put(
-        `api/student/profile/update/${id}/`,
+        `https://studentlibrary100.herokuapp.com/api/student/profile/update/${id}/`,
         {
           name: name,
           class_detail: classDetail,

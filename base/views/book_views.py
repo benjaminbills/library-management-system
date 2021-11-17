@@ -9,6 +9,7 @@ from base.serializers import BookSerializer, CollectedBookSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import pandas as pd
 
 
 
@@ -130,3 +131,17 @@ def collectedBooks(request):
   collectedBooks = CollectedBooks.objects.all()
   serializer = CollectedBookSerializer(collectedBooks, many=True)
   return Response(serializer.data)
+
+@api_view(['POST'])
+def uploadBooks(request):
+  books = request.FILES['books']
+  if not books.name.endswith('xlsx'):
+    message = {'detail':'wrong format please upload excel file(.xlsx)'}
+    return Response(message,status=status.HTTP_406_NOT_ACCEPTABLE)
+  df = pd.read_excel(books)
+  for USER, TITLE, AUTHOR, SUBJECT, PUBLISHED in zip(df.user,df.title, df.author, df.subject, df.published):
+    userDb = NewUser.objects.get(pk=USER)
+    models= Books(user=userDb, title=TITLE, author=AUTHOR, subject=SUBJECT, published=PUBLISHED)
+    models.save()
+  message = {'detail':'successfully saved data'}
+  return Response(message,status=status.HTTP_200_OK)
