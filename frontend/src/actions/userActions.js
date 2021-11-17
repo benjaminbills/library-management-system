@@ -21,7 +21,7 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
 } from "../constants/userConstant";
-
+const url = "https://studentlibrary100.herokuapp.com/";
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -33,7 +33,7 @@ export const login = (email, password) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      "https://studentlibrary100.herokuapp.com/api/user/login/",
+      `${url}api/user/login/`,
       { email: email, password: password },
       config
     );
@@ -69,7 +69,7 @@ export const register = (username, email, password) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      "https://studentlibrary100.herokuapp.com/api/user/register/",
+      `${url}api/user/register/`,
       {
         email: email,
         password: password,
@@ -109,10 +109,7 @@ export const getUserProfile = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(
-      `https://studentlibrary100.herokuapp.com/api/user/${id}/`,
-      config
-    );
+    const { data } = await axios.get(`${url}api/user/${id}/`, config);
     dispatch({ type: USER_PROFILE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -142,7 +139,7 @@ export const updateProfile =
         },
       };
       const { data } = await axios.put(
-        "https://studentlibrary100.herokuapp.com/api/user/profile/update/",
+        `${url}api/user/profile/update/`,
         {
           about: about,
           password: password,
@@ -181,7 +178,7 @@ export const forgotPassword = (email) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      "https://studentlibrary100.herokuapp.com/api/user/forgotpassword/",
+      `${url}api/user/forgotpassword/`,
       {
         email: email,
       },
@@ -218,7 +215,7 @@ export const registerStudent =
         },
       };
       const { data } = await axios.post(
-        "https://studentlibrary100.herokuapp.com/api/user/register-student/",
+        `${url}api/user/register-student/`,
         {
           email: email,
           schoolId: studentId,
@@ -255,10 +252,7 @@ export const getUsers =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(
-        `https://studentlibrary100.herokuapp.com/api/user/?${search}`,
-        config
-      );
+      const { data } = await axios.get(`${url}api/user/?${search}`, config);
       console.log(data);
       dispatch({ type: USER_LIST_SUCCESS, payload: data });
     } catch (error) {

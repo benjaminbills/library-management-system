@@ -16,7 +16,7 @@ import {
   STUDENT_UPLOAD_REQUEST,
   STUDENT_UPLOAD_SUCCESS,
 } from "../constants/studentConstant";
-
+const url = "https://studentlibrary100.herokuapp.com/";
 export const uploadStudent = (book) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -32,7 +32,7 @@ export const uploadStudent = (book) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.put(
-      `https://studentlibrary100.herokuapp.com/api/book/update/${book.id}/`,
+      `${url}api/book/update/${book.id}/`,
       book,
       config
     );
@@ -65,10 +65,7 @@ export const getStudents =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(
-        `https://studentlibrary100.herokuapp.com/api/student/?${search}`,
-        config
-      );
+      const { data } = await axios.get(`${url}api/student/?${search}`, config);
       console.log(data);
       dispatch({ type: STUDENT_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -98,7 +95,7 @@ export const registerStudent =
         },
       };
       const { data } = await axios.post(
-        "https://studentlibrary100.herokuapp.com/api/student/register/",
+        `${url}api/student/register/`,
         {
           name: name,
           admission_num: admission_num,
@@ -134,10 +131,7 @@ export const getStudentProfile = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(
-      `https://studentlibrary100.herokuapp.com/api/student/${id}/`,
-      config
-    );
+    const { data } = await axios.get(`${url}api/student/${id}/`, config);
     dispatch({ type: STUDENT_PROFILE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -168,7 +162,7 @@ export const updateStudentProfile =
         },
       };
       const { data } = await axios.put(
-        `https://studentlibrary100.herokuapp.com/api/student/profile/update/${id}/`,
+        `${url}api/student/profile/update/${id}/`,
         {
           name: name,
           class_detail: classDetail,

@@ -17,9 +17,9 @@ import {
   BOOK_ASSIGNED_REQUEST,
   BOOK_ASSIGNED_SUCCESS,
   BOOK_ASSIGNED_FAIL,
-  BOOK_RETURN_SUCCESS,
   BOOK_RETURN_FAIL,
   BOOK_HISTORY_REQUEST,
+  BOOK_RETURN_SUCCESS,
   BOOK_HISTORY_SUCCESS,
   BOOK_HISTORY_FAIL,
   BOOK_COLLECTED_REQUEST,
@@ -27,6 +27,8 @@ import {
   BOOK_COLLECTED_FAIL,
 } from "../constants/bookConstant";
 
+const url = "https://studentlibrary100.herokuapp.com/";
+// const url = "http://127.0.0.1:3000/";
 export const getBooks =
   (search = "") =>
   async (dispatch) => {
@@ -35,9 +37,7 @@ export const getBooks =
         type: BOOK_LIST_REQUEST,
       });
 
-      const { data } = await axios.get(
-        `https://studentlibrary100.herokuapp.com/api/book/?${search}`
-      );
+      const { data } = await axios.get(`${url}api/book/?${search}`);
       dispatch({
         type: BOOK_LIST_SUCCESS,
         payload: data,
@@ -52,7 +52,6 @@ export const getBooks =
       });
     }
   };
-
 export const addBook = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -67,11 +66,7 @@ export const addBook = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.post(
-      "https://studentlibrary100.herokuapp.com/api/book/add/",
-      {},
-      config
-    );
+    const { data } = await axios.post(`${url}api/book/add/`, {}, config);
     dispatch({
       type: ADD_BOOK_SUCCESS,
       payload: data,
@@ -101,10 +96,7 @@ export const getBookDetails = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(
-      `https://studentlibrary100.herokuapp.com/api/book/${id}/`,
-      config
-    );
+    const { data } = await axios.get(`${url}/api/book/${id}/`, config);
     dispatch({
       type: BOOK_DETAILS_SUCCESS,
       payload: data,
@@ -135,7 +127,7 @@ export const updateBook = (book) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.put(
-      `https://studentlibrary100.herokuapp.com/api/book/update/${book.id}/`,
+      `${url}api/book/update/${book.id}/`,
       book,
       config
     );
@@ -168,10 +160,7 @@ export const deleteBook = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.delete(
-      `https://studentlibrary100.herokuapp.com/api/book/delete/${id}/`,
-      config
-    );
+    const { data } = await axios.delete(`${url}api/book/delete/${id}/`, config);
     dispatch({
       type: BOOK_DETAILS_SUCCESS,
       payload: data,
@@ -202,7 +191,7 @@ export const assignBook = (studentId, bookId) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.post(
-      `https://studentlibrary100.herokuapp.com/api/book/collect/${studentId}/`,
+      `${url}api/book/collect/${studentId}/`,
       {
         bookId: bookId,
       },
@@ -238,7 +227,7 @@ export const returnBook = (collectedBookId) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.put(
-      `https://studentlibrary100.herokuapp.com/api/book/return-book/${collectedBookId}/`,
+      `${url}api/book/return-book/${collectedBookId}/`,
       config
     );
     dispatch({
@@ -271,7 +260,7 @@ export const bookHistory = (bookId) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.get(
-      `https://studentlibrary100.herokuapp.com/api/book/history/${bookId}/`,
+      `${url}api/book/history/${bookId}/`,
       config
     );
     dispatch({
@@ -303,10 +292,7 @@ export const booksCollected = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(
-      `https://studentlibrary100.herokuapp.com/api/book/collected-books/`,
-      config
-    );
+    const { data } = await axios.get(`${url}api/book/collected-books/`, config);
     dispatch({
       type: BOOK_COLLECTED_SUCCESS,
       payload: data,
