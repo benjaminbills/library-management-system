@@ -21,7 +21,8 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
 } from "../constants/userConstant";
-const url = "https://studentlibrary100.herokuapp.com/";
+// const url = "https://studentlibrary100.herokuapp.com/";
+const url = "http://127.0.0.1:8000/";
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({

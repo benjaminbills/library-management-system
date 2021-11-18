@@ -25,6 +25,7 @@ function CollectedBooks() {
         <thead>
           <tr>
             <th scope="col">Student</th>
+            <th scope="col">Class</th>
             <th scope="col">Book</th>
             <th scope="col">Author</th>
             <th scope="col">Returned</th>
@@ -34,9 +35,36 @@ function CollectedBooks() {
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>
+              <input
+                // onChange={searchChangeHandler}
+                className="form-control"
+                placeholder="Student"
+                // ref={titleRef}
+              />
+            </td>
+            <td>
+              <input
+                // onChange={searchChangeHandler}
+                className="form-control"
+                placeholder="Class"
+                // ref={authorRef}
+              />
+            </td>
+            <td>
+              <input
+                // onChange={searchChangeHandler}
+                className="form-control"
+                placeholder="Author"
+                // ref={subjectRef}
+              />
+            </td>
+          </tr>
           {books.map((book) => (
             <tr key={book.id}>
               <td>{book.student.name}</td>
+              <td>{book.student.class_detail}</td>
               <td>{book.book.title}</td>
               <td>{book.book.author}</td>
               <td>{book.isReturned ? <p>yes</p> : <p>No</p>}</td>

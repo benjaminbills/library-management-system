@@ -101,11 +101,12 @@ function Students(props) {
         },
       };
       const { data } = await axios.post(
-        "/api/student/upload-excel/",
+        "http://127.0.0.1:8000/api/student/upload-excel/",
         formData,
         config
       );
       setUploading(false);
+      dispatch(getStudents());
     } catch (error) {
       setUploading(false);
     }

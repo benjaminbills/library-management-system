@@ -2,7 +2,7 @@
 from django.db.models.fields import DateField
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import serializers, status
-from base.filters import BookFilter
+from base.filters import BookFilter, CollectedBooksFilter
 from base.models import Books, CollectedBooks, NewUser, Student
 from datetime import date, datetime
 from base.serializers import BookSerializer, CollectedBookSerializer
@@ -126,11 +126,31 @@ def bookHistory(request, pk):
   serializer = CollectedBookSerializer(historyOfBook, many=True)
   return Response(serializer.data)
 
+# @api_view(['GET'])
+# def collectedBooks(request):
+#   collectedBooks = CollectedBooks.objects.all()
+#   serializer = CollectedBookSerializer(collectedBooks, many=True)
+  # return Response(serializer.data)
 @api_view(['GET'])
 def collectedBooks(request):
   collectedBooks = CollectedBooks.objects.all()
+  collectedBooksFilter = CollectedBooksFilter(request.GET, queryset=collectedBooks)
   serializer = CollectedBookSerializer(collectedBooks, many=True)
-  return Response(serializer.data)
+  page = request.query_params.get('page')
+  print(page)
+  collectedBooks = collectedBooksFilter.qs
+  paginator = Paginator(collectedBooks, 8)
+  try:
+    collectedBooks = paginator.page(page)
+  except PageNotAnInteger:
+    collectedBooks = paginator.page(1)
+  except EmptyPage:
+    collectedBooks = paginator.page(paginator.num_pages)
+  if page == None:
+    page = 1
+  page = int(page)
+  serializer = CollectedBookSerializer(collectedBooks, many=True)
+  return Response({'books':serializer.data, 'page':page, 'pages':paginator.num_pages})
 
 @api_view(['POST'])
 def uploadBooks(request):

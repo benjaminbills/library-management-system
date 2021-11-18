@@ -1,6 +1,6 @@
 from django.db.models import fields
 from django_filters.filters import NumberFilter
-from .models import Books, Student
+from .models import Books, CollectedBooks, Student
 import django_filters
 from django_filters import CharFilter
 

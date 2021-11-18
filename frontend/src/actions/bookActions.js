@@ -27,8 +27,8 @@ import {
   BOOK_COLLECTED_FAIL,
 } from "../constants/bookConstant";
 
-const url = "https://studentlibrary100.herokuapp.com/";
-// const url = "http://127.0.0.1:3000/";
+// const url = "https://studentlibrary100.herokuapp.com/";
+const url = "http://127.0.0.1:8000/";
 export const getBooks =
   (search = "") =>
   async (dispatch) => {
@@ -96,7 +96,7 @@ export const getBookDetails = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`${url}/api/book/${id}/`, config);
+    const { data } = await axios.get(`${url}api/book/${id}/`, config);
     dispatch({
       type: BOOK_DETAILS_SUCCESS,
       payload: data,
@@ -293,6 +293,7 @@ export const booksCollected = () => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.get(`${url}api/book/collected-books/`, config);
+    console.log(data);
     dispatch({
       type: BOOK_COLLECTED_SUCCESS,
       payload: data,

@@ -16,7 +16,8 @@ import {
   STUDENT_UPLOAD_REQUEST,
   STUDENT_UPLOAD_SUCCESS,
 } from "../constants/studentConstant";
-const url = "https://studentlibrary100.herokuapp.com/";
+// const url = "https://studentlibrary100.herokuapp.com/";
+const url = "http://127.0.0.1:8000/";
 export const uploadStudent = (book) => async (dispatch, getState) => {
   try {
     dispatch({

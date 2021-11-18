@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   addBook,
   assignBook,
@@ -21,6 +22,8 @@ function Books(props) {
   const authorRef = useRef("");
   const titleRef = useRef("");
   const subjectRef = useRef("");
+  const [uploading, setUploading] = useState(false);
+  const [showHide, setShowHide] = useState(false);
   const bookList = useSelector((state) => state.bookList);
   const { loading, error, books, page, pages } = bookList;
   const addB = useSelector((state) => state.addBook);
@@ -87,6 +90,39 @@ function Books(props) {
       dispatch(getBooks(`${search}&page=1`));
     }
   };
+  const uploadHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("books", file);
+    setUploading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.post(
+        "http://127.0.0.1:8000/api/book/upload-books/",
+        formData,
+        config
+      );
+      setUploading(false);
+      dispatch(
+        getBooks(
+          `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
+        )
+      );
+    } catch (error) {
+      setUploading(false);
+    }
+  };
+  const showHideUpload = () => {
+    if (showHide) {
+      setShowHide(false);
+    } else {
+      setShowHide(true);
+    }
+  };
   return (
     <div>
       {loading && <Loader />}
@@ -94,6 +130,23 @@ function Books(props) {
       <button className="btn btn-dark" onClick={addBookHandler}>
         Add Books
       </button>
+      <button className="btn btn-success" onClick={showHideUpload}>
+        Upload Excel
+      </button>
+      {showHide && (
+        <div class="mb-3">
+          <label htmlFor="formFile" class="form-label">
+            Upload books In Excel Format
+          </label>
+          <input
+            class="form-control"
+            type="file"
+            id="formFile"
+            onChange={(e) => uploadHandler(e)}
+          />
+        </div>
+      )}
+      {uploading && <Loader />}
       <table className="table table-striped">
         <thead>
           <tr>
