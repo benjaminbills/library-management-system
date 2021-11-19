@@ -278,33 +278,38 @@ export const bookHistory = (bookId) => async (dispatch, getState) => {
   }
 };
 
-export const booksCollected = () => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: BOOK_COLLECTED_REQUEST,
-    });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-    const { data } = await axios.get(`${url}api/book/collected-books/`, config);
-    console.log(data);
-    dispatch({
-      type: BOOK_COLLECTED_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: BOOK_COLLECTED_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
-    });
-  }
-};
+export const booksCollected =
+  (search = "") =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: BOOK_COLLECTED_REQUEST,
+      });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${url}api/book/collected-books/?${search}`,
+        config
+      );
+      console.log(data);
+      dispatch({
+        type: BOOK_COLLECTED_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: BOOK_COLLECTED_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  };

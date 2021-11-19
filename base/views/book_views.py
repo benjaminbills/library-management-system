@@ -2,7 +2,7 @@
 from django.db.models.fields import DateField
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import serializers, status
-from base.filters import BookFilter, CollectedBooksFilter
+from base.filters import BookFilter
 from base.models import Books, CollectedBooks, NewUser, Student
 from datetime import date, datetime
 from base.serializers import BookSerializer, CollectedBookSerializer
@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pandas as pd
+from django.db.models import Q
 
 
 
@@ -126,31 +127,53 @@ def bookHistory(request, pk):
   serializer = CollectedBookSerializer(historyOfBook, many=True)
   return Response(serializer.data)
 
+@api_view(['GET'])
+def collectedBooks(request):
+  student_name = request.query_params.get('student')
+  admission = request.query_params.get('admission')
+  class_detail = request.query_params.get('class')
+  book = request.query_params.get('book')
+  isReturned = request.query_params.get('returned')
+  author = request.query_params.get('author')
+  if student_name == None:
+    student_name = ''
+  if admission == None:
+    admission = ''
+  if class_detail == None:
+    class_detail = ''
+  if book == None:
+    book = ''
+  if author == None:
+    author = ''
+  if isReturned == None:
+    isReturned = False
+  print(student_name)
+  print(admission)
+  books = CollectedBooks.objects.filter(student__name__icontains=student_name).filter(student__admission_num__icontains=admission).filter(student__class_detail__icontains=class_detail).filter(book__title__icontains=book).filter(book__author__icontains=author)
+  
+  print(books)  
+  serializer = CollectedBookSerializer(books, many=True)
+  return Response(serializer.data)
 # @api_view(['GET'])
 # def collectedBooks(request):
 #   collectedBooks = CollectedBooks.objects.all()
+#   collectedBooksFilter = CollectedBooksFilter(request.GET, queryset=collectedBooks)
 #   serializer = CollectedBookSerializer(collectedBooks, many=True)
-  # return Response(serializer.data)
-@api_view(['GET'])
-def collectedBooks(request):
-  collectedBooks = CollectedBooks.objects.all()
-  collectedBooksFilter = CollectedBooksFilter(request.GET, queryset=collectedBooks)
-  serializer = CollectedBookSerializer(collectedBooks, many=True)
-  page = request.query_params.get('page')
-  print(page)
-  collectedBooks = collectedBooksFilter.qs
-  paginator = Paginator(collectedBooks, 8)
-  try:
-    collectedBooks = paginator.page(page)
-  except PageNotAnInteger:
-    collectedBooks = paginator.page(1)
-  except EmptyPage:
-    collectedBooks = paginator.page(paginator.num_pages)
-  if page == None:
-    page = 1
-  page = int(page)
-  serializer = CollectedBookSerializer(collectedBooks, many=True)
-  return Response({'books':serializer.data, 'page':page, 'pages':paginator.num_pages})
+#   page = request.query_params.get('page')
+#   print(page)
+#   collectedBooks = collectedBooksFilter.qs
+#   paginator = Paginator(collectedBooks, 8)
+#   try:
+#     collectedBooks = paginator.page(page)
+#   except PageNotAnInteger:
+#     collectedBooks = paginator.page(1)
+#   except EmptyPage:
+#     collectedBooks = paginator.page(paginator.num_pages)
+#   if page == None:
+#     page = 1
+#   page = int(page)
+#   serializer = CollectedBookSerializer(collectedBooks, many=True)
+#   return Response({'books':serializer.data, 'page':page, 'pages':paginator.num_pages})
 
 @api_view(['POST'])
 def uploadBooks(request):

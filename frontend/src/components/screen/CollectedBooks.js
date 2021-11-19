@@ -4,14 +4,51 @@ import { booksCollected } from "../../actions/bookActions";
 import Loader from "../Loader";
 import Paginate from "../Paginate";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import YesNoButton from "../YesNoButton";
 
 function CollectedBooks() {
+  const studentNameRef = useRef("");
+  const admissionNumRef = useRef("");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState(false);
+  const [collectedBooks, setCollectedBooks] = useState([]);
+  const classRef = useRef("");
+  const bookRef = useRef("");
+  const authorRef = useRef("");
   const dispatch = useDispatch();
   const booksCollectedAll = useSelector((state) => state.booksCollectedAll);
   const { loading, books } = booksCollectedAll;
   useEffect(() => {
-    dispatch(booksCollected());
-  }, [dispatch]);
+    if (!books) {
+      dispatch(booksCollected());
+    } else {
+      setCollectedBooks(books);
+    }
+  }, [dispatch, books]);
+
+  const searchChangeHandler = (e) => {
+    setSearch(
+      `student=${studentNameRef.current.value}&admission=${admissionNumRef.current.value}&class=${classRef.current.value}&book=${bookRef.current.value}&author=${authorRef.current.value}`
+    );
+    dispatch(
+      booksCollected(
+        `student=${studentNameRef.current.value}&admission=${admissionNumRef.current.value}&class=${classRef.current.value}&book=${bookRef.current.value}&author=${authorRef.current.value}`
+      )
+    );
+  };
+
+  const filterYesNo = () => {
+    let filteredBooks;
+    if (filter) {
+      filteredBooks = books.filter((book) => book.isReturned === true);
+      setFilter(false);
+    } else {
+      filteredBooks = books.filter((book) => book.isReturned === false);
+      setFilter(true);
+    }
+    setCollectedBooks(filteredBooks);
+  };
+
   return (
     <div>
       <ReactHTMLTableToExcel
@@ -25,6 +62,7 @@ function CollectedBooks() {
         <thead>
           <tr>
             <th scope="col">Student</th>
+            <th scope="col">Admission Num</th>
             <th scope="col">Class</th>
             <th scope="col">Book</th>
             <th scope="col">Author</th>
@@ -38,32 +76,52 @@ function CollectedBooks() {
           <tr>
             <td>
               <input
-                // onChange={searchChangeHandler}
+                onChange={searchChangeHandler}
                 className="form-control"
                 placeholder="Student"
-                // ref={titleRef}
+                ref={studentNameRef}
               />
             </td>
             <td>
               <input
-                // onChange={searchChangeHandler}
+                onChange={searchChangeHandler}
+                className="form-control"
+                placeholder="Admission"
+                ref={admissionNumRef}
+              />
+            </td>
+            <td>
+              <input
+                onChange={searchChangeHandler}
                 className="form-control"
                 placeholder="Class"
-                // ref={authorRef}
+                ref={classRef}
               />
             </td>
             <td>
               <input
-                // onChange={searchChangeHandler}
+                onChange={searchChangeHandler}
                 className="form-control"
-                placeholder="Author"
-                // ref={subjectRef}
+                placeholder="Book"
+                ref={bookRef}
               />
             </td>
+            <td>
+              <input
+                onChange={searchChangeHandler}
+                className="form-control"
+                placeholder="Author"
+                ref={authorRef}
+              />
+            </td>
+            <td>
+              <button onClick={filterYesNo}>yes</button>
+            </td>
           </tr>
-          {books.map((book) => (
+          {collectedBooks.map((book) => (
             <tr key={book.id}>
               <td>{book.student.name}</td>
+              <td>{book.student.admission_num}</td>
               <td>{book.student.class_detail}</td>
               <td>{book.book.title}</td>
               <td>{book.book.author}</td>
@@ -80,7 +138,6 @@ function CollectedBooks() {
           ))}
         </tbody>
       </table>
-
       {/* <Paginate
         page={page}
         pages={pages}

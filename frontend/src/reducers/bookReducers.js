@@ -152,7 +152,7 @@ export const bookHistoryReducer = (state = {}, action) => {
   }
 };
 
-export const booksCollectedReducer = (state = { books: [] }, action) => {
+export const booksCollectedReducer = (state = {}, action) => {
   switch (action.type) {
     case BOOK_COLLECTED_REQUEST:
       return { loading: true, books: [] };
