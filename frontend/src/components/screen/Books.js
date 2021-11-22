@@ -23,12 +23,15 @@ function Books(props) {
   const titleRef = useRef("");
   const subjectRef = useRef("");
   const [uploading, setUploading] = useState(false);
+  const [uploadingError, setUploadingError] = useState("");
   const [showHide, setShowHide] = useState(false);
   const bookList = useSelector((state) => state.bookList);
   const { loading, error, books, page, pages } = bookList;
   const addB = useSelector((state) => state.addBook);
   const { success: successCreate, loading: addBookLoading, book } = addB;
   let location = history.location.pathname;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   let renderEditAndDelete = location === "/books";
 
   const searchChangeHandler = () => {
@@ -57,17 +60,21 @@ function Books(props) {
     );
   };
   useEffect(() => {
-    dispatch({ type: ADD_BOOK_RESET });
-    if (successCreate) {
-      history.push(`/books/edit/${book.id}`);
+    if (!userInfo) {
+      history.push("/login");
     } else {
-      dispatch(
-        getBooks(
-          `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
-        )
-      );
+      dispatch({ type: ADD_BOOK_RESET });
+      if (successCreate) {
+        history.push(`/books/edit/${book.id}`);
+      } else {
+        dispatch(
+          getBooks(
+            `title=${titleRef.current.value}&author=${authorRef.current.value}&subject=${subjectRef.current.value}`
+          )
+        );
+      }
     }
-  }, [dispatch, successCreate, book, history]);
+  }, [dispatch, successCreate, book, history, userInfo]);
 
   const addBookHandler = () => {
     dispatch(addBook());
@@ -113,6 +120,11 @@ function Books(props) {
         )
       );
     } catch (error) {
+      console.log(error.response);
+      //  error.response && error.response.data.detail
+      //         ? error.response.data.detail
+      //         : error.message,
+      setUploadingError(error.response.data.detail);
       setUploading(false);
     }
   };
@@ -134,95 +146,105 @@ function Books(props) {
         Upload Excel
       </button>
       {showHide && (
-        <div class="mb-3">
-          <label htmlFor="formFile" class="form-label">
+        <div className="mb-3">
+          <label htmlFor="formFile" className="form-label">
             Upload books In Excel Format
           </label>
           <input
-            class="form-control"
+            className="form-control"
             type="file"
             id="formFile"
             onChange={(e) => uploadHandler(e)}
           />
+          {uploadingError && (
+            <div className="alert alert-danger" role="alert">
+              {uploadingError}
+            </div>
+          )}
         </div>
       )}
-      {uploading && <Loader />}
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Author</th>
-            <th scope="col">Subject</th>
-            <th scope="col">Published</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <input
-                onChange={searchChangeHandler}
-                className="form-control"
-                placeholder="Title"
-                ref={titleRef}
-              />
-            </td>
-            <td>
-              <input
-                onChange={searchChangeHandler}
-                className="form-control"
-                placeholder="Author"
-                ref={authorRef}
-              />
-            </td>
-            <td>
-              <input
-                onChange={searchChangeHandler}
-                className="form-control"
-                placeholder="Subject"
-                ref={subjectRef}
-              />
-            </td>
-          </tr>
-          {books.map((book) => (
-            <tr key={book.id}>
-              <td>
-                <Link to={`/books/${book.id}`}>{book.title}</Link>
-              </td>
-              <td>{book.author}</td>
-              <td>{book.subject}</td>
-              <td>{book.published}</td>
-              {renderEditAndDelete && (
-                <td>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() => deleteHandler(book.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              )}
-              {renderEditAndDelete && (
-                <td>
-                  <Link to={`/books/edit/${book.id}`}>Edit</Link>
-                </td>
-              )}
-              {!renderEditAndDelete && (
-                <td>
-                  <button
-                    disabled={book.num_of_book <= 0}
-                    onClick={() => assignBookHandler(book.id)}
-                    className="btn btn-dark"
-                  >
-                    Assign Book
-                  </button>
-                </td>
-              )}
+      {uploading ? (
+        <Loader />
+      ) : error ? (
+        <div className="alert alert-danger">{error}</div>
+      ) : (
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Author</th>
+              <th scope="col">Subject</th>
+              <th scope="col">Published</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input
+                  onChange={searchChangeHandler}
+                  className="form-control"
+                  placeholder="Title"
+                  ref={titleRef}
+                />
+              </td>
+              <td>
+                <input
+                  onChange={searchChangeHandler}
+                  className="form-control"
+                  placeholder="Author"
+                  ref={authorRef}
+                />
+              </td>
+              <td>
+                <input
+                  onChange={searchChangeHandler}
+                  className="form-control"
+                  placeholder="Subject"
+                  ref={subjectRef}
+                />
+              </td>
+            </tr>
+            {books.map((book) => (
+              <tr key={book.id}>
+                <td>
+                  <Link to={`/books/${book.id}`}>{book.title}</Link>
+                </td>
+                <td>{book.author}</td>
+                <td>{book.subject}</td>
+                <td>{book.published}</td>
+                {renderEditAndDelete && (
+                  <td>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => deleteHandler(book.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
+                {renderEditAndDelete && (
+                  <td>
+                    <Link to={`/books/edit/${book.id}`}>Edit</Link>
+                  </td>
+                )}
+                {!renderEditAndDelete && (
+                  <td>
+                    <button
+                      disabled={book.num_of_book <= 0}
+                      onClick={() => assignBookHandler(book.id)}
+                      className="btn btn-dark"
+                    >
+                      Assign Book
+                    </button>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <Paginate
         page={page}
         pages={pages}

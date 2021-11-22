@@ -182,9 +182,13 @@ def uploadBooks(request):
     message = {'detail':'wrong format please upload excel file(.xlsx)'}
     return Response(message,status=status.HTTP_406_NOT_ACCEPTABLE)
   df = pd.read_excel(books)
-  for USER, TITLE, AUTHOR, SUBJECT, PUBLISHED in zip(df.user,df.title, df.author, df.subject, df.published):
-    userDb = NewUser.objects.get(pk=USER)
-    models= Books(user=userDb, title=TITLE, author=AUTHOR, subject=SUBJECT, published=PUBLISHED)
-    models.save()
-  message = {'detail':'successfully saved data'}
-  return Response(message,status=status.HTTP_200_OK)
+  try:
+    for USER, TITLE, AUTHOR, SUBJECT, PUBLISHED in zip(df.user,df.title, df.author, df.subject, df.published):
+      userDb = NewUser.objects.get(pk=USER)
+      models= Books(user=userDb, title=TITLE, author=AUTHOR, subject=SUBJECT, published=PUBLISHED)
+      models.save()
+    message = {'detail':'successfully saved data'}
+    return Response(message,status=status.HTTP_200_OK)
+  except:
+    message = {'detail':'incorrect table format. Table should be in this format {user,title,author,subject, published} '}
+    return Response(message,status=status.HTTP_406_NOT_ACCEPTABLE)

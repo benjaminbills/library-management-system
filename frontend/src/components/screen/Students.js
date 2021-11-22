@@ -37,12 +37,17 @@ function Students(props) {
   const [search, setSearch] = useState("");
   const [excelFile, setExcelFile] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadingError, setUploadingError] = useState("");
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [showHide, setShowHide] = useState(false);
   const studentRegister = useSelector((state) => state.studentRegister);
   const { success, loading, studentInfo, error } = studentRegister;
   const studentList = useSelector((state) => state.studentList);
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  let history = useHistory();
+
   const {
     success: userListSuccess,
     loading: userListLoading,
@@ -68,9 +73,12 @@ function Students(props) {
     dispatch(registerStudent(name, admissionNum, classDetail, phone));
   };
   useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
     dispatch(getStudents());
     dispatch({ type: STUDENT_RESGISTER_RESET });
-  }, [dispatch]);
+  }, [dispatch, userInfo, history]);
 
   const searchChangeHandler = (e) => {
     setSearch(
@@ -106,8 +114,11 @@ function Students(props) {
         config
       );
       setUploading(false);
+
       dispatch(getStudents());
     } catch (error) {
+      console.log(error.response.data.detail);
+      setUploadingError(error.response.data.detail);
       setUploading(false);
     }
   };
@@ -154,6 +165,11 @@ function Students(props) {
           </div>
         )}
         {uploading && <Loader />}
+        {uploadingError && (
+          <div class="alert alert-danger" role="alert">
+            {uploadingError}
+          </div>
+        )}
         <Modal
           closeTimeoutMS={200}
           style={customStyles}
@@ -199,68 +215,75 @@ function Students(props) {
             Close
           </button>
         </Modal>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Admission Num</th>
-              <th scope="col">Name</th>
-              <th scope="col">Class</th>
-              <th scope="col">Phone</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input
-                  onChange={searchChangeHandler}
-                  className="form-control"
-                  placeholder="ID"
-                  ref={schoolIdRef}
-                />
-              </td>
-              <td>
-                <input
-                  onChange={searchChangeHandler}
-                  className="form-control"
-                  placeholder="Name"
-                  ref={userNameSearchRef}
-                />
-              </td>
-              <td>
-                <input
-                  onChange={searchChangeHandler}
-                  className="form-control"
-                  placeholder="Email"
-                  ref={classSearchRef}
-                />
-              </td>
-            </tr>
-
-            {students.map((student) => (
-              <tr key={student.admission_num}>
-                <td>{student.admission_num}</td>
-                <td>{student.name}</td>
-                <td>{student.class_detail}</td>
-                <td>{student.phone}</td>
-                <td>
-                  <Link to={`/students/${student.admission_num}`}>
-                    <button className="btn btn-dark">Assign Book</button>
-                  </Link>
-                </td>
-                <td>
-                  {/* <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => deleteHandler(book.id)}
-                >
-                  Delete
-                </button> */}
-                </td>
-                <td>{/* <Link to={`/books/edit/${book.id}`}>Edit</Link> */}</td>
+        {userListLoading ? (
+          <Loader />
+        ) : userListError ? (
+          <p>{userListError}</p>
+        ) : (
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Admission Num</th>
+                <th scope="col">Name</th>
+                <th scope="col">Class</th>
+                <th scope="col">Phone</th>
+                <th scope="col"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input
+                    onChange={searchChangeHandler}
+                    className="form-control"
+                    placeholder="ID"
+                    ref={schoolIdRef}
+                  />
+                </td>
+                <td>
+                  <input
+                    onChange={searchChangeHandler}
+                    className="form-control"
+                    placeholder="Name"
+                    ref={userNameSearchRef}
+                  />
+                </td>
+                <td>
+                  <input
+                    onChange={searchChangeHandler}
+                    className="form-control"
+                    placeholder="Email"
+                    ref={classSearchRef}
+                  />
+                </td>
+              </tr>
+              {students.map((student) => (
+                <tr key={student.admission_num}>
+                  <td>{student.admission_num}</td>
+                  <td>{student.name}</td>
+                  <td>{student.class_detail}</td>
+                  <td>{student.phone}</td>
+                  <td>
+                    <Link to={`/students/${student.admission_num}`}>
+                      <button className="btn btn-dark">Assign Book</button>
+                    </Link>
+                  </td>
+                  <td>
+                    {/* <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => deleteHandler(book.id)}
+                  >
+                    Delete
+                  </button> */}
+                  </td>
+                  <td>
+                    {/* <Link to={`/books/edit/${book.id}`}>Edit</Link> */}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         <div className="pt-5">
           <Paginate
             page={page}

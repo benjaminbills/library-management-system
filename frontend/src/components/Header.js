@@ -13,9 +13,9 @@ function Header() {
   return (
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <div className="container-fluid">
-        <button className="navbar-brand" href="#">
-          Navbar
-        </button>
+        <Link className="navbar-brand" to="/collectedbooks">
+          SML
+        </Link>
 
         <div className="navbar-nav">
           <Link className="nav-link" to="/students">

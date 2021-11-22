@@ -24,11 +24,15 @@ def simple_upload(request):
       message = {'detail':'wrong format'}
       return Response(message,status=status.HTTP_406_NOT_ACCEPTABLE)
   df = pd.read_excel(new_student)
-  for NAME, ADMISSION_NUM, CLASS_DETAIL, PHONE in zip(df.name,df.admission_num, df.class_detail, df.phone):
-        models= Student(name=NAME, admission_num=ADMISSION_NUM, class_detail=CLASS_DETAIL, phone=PHONE)
-        models.save()
-  message = {'detail':'successfully saved data'}
-  return Response(message,status=status.HTTP_200_OK)
+  try:
+    for NAME, ADMISSION_NUM, CLASS_DETAIL, PHONE in zip(df.name,df.admission_num, df.class_detail, df.phone):
+          models= Student(name=NAME, admission_num=ADMISSION_NUM, class_detail=CLASS_DETAIL, phone=PHONE)
+          models.save()
+    message = {'detail':'successfully saved data'}
+    return Response(message,status=status.HTTP_200_OK)
+  except:
+    message = {'detail':'incorrect table format. Table should be in this format {name,admission,class_detail, phone} '}
+    return Response(message,status=status.HTTP_406_NOT_ACCEPTABLE)
 @api_view(['GET'])
 def getStudents(request):
   students = Student.objects.all()

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { booksCollected } from "../../actions/bookActions";
+import { useHistory } from "react-router-dom";
+
 import Loader from "../Loader";
 import Paginate from "../Paginate";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
@@ -18,13 +20,19 @@ function CollectedBooks() {
   const dispatch = useDispatch();
   const booksCollectedAll = useSelector((state) => state.booksCollectedAll);
   const { loading, books } = booksCollectedAll;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  let history = useHistory();
   useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
     if (!books) {
       dispatch(booksCollected());
     } else {
       setCollectedBooks(books);
     }
-  }, [dispatch, books]);
+  }, [dispatch, books, userInfo, history]);
 
   const searchChangeHandler = (e) => {
     setSearch(
@@ -37,14 +45,21 @@ function CollectedBooks() {
     );
   };
 
-  const filterYesNo = () => {
+  const all = () => {
+    setCollectedBooks(books);
+  };
+
+  const filterYesNo = (e) => {
+    let selected = e.target.value;
     let filteredBooks;
-    if (filter) {
-      filteredBooks = books.filter((book) => book.isReturned === true);
-      setFilter(false);
-    } else {
+    if (selected === "no") {
       filteredBooks = books.filter((book) => book.isReturned === false);
-      setFilter(true);
+    }
+    if (selected === "yes") {
+      filteredBooks = books.filter((book) => book.isReturned === true);
+    }
+    if (selected === "all") {
+      filteredBooks = books;
     }
     setCollectedBooks(filteredBooks);
   };
@@ -115,7 +130,13 @@ function CollectedBooks() {
               />
             </td>
             <td>
-              <button onClick={filterYesNo}>yes</button>
+              <select className="form-select" onChange={filterYesNo}>
+                <option value="all">All</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+              {/* <button onClick={all}>all</button>
+              <button onClick={filterYesNo}>yes</button> */}
             </td>
           </tr>
           {collectedBooks.map((book) => (
